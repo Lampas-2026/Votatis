@@ -2,7 +2,7 @@
 
 
 
-<img src="https://github.com/Lampas-2026/Votatis/raw/main/logo.png" width="220" alt="Votatis Logo" />
+<img src="https://github.com/Lampas-2026/Votatis/raw/main/1780887187847.png" width="100%" alt="Votatis Logo" />
 
 
 
