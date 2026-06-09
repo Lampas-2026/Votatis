@@ -2,7 +2,7 @@
 tldr: 3dulev/votatis-data 의 이슈는 이 머신의 gh CLI 인증 계정으로는 못 고친다(쓰기 권한 없음 — "does not have the correct permissions to UpdateIssue"). 이슈는 votatis-bot GitHub App 이 만들므로, 프로그램적 수정은 .prod.vars 의 App 자격증명(GITHUB_APP_ID/GITHUB_APP_PRIVATE_KEY)으로 JWT→설치토큰을 발급해 REST PATCH 한다.
 tags: [pitfall, github, intake-api, ops]
 last_retrieved: 2026-06-10
-retrieval_count: 0
+retrieval_count: 1
 ---
 
 ## 규칙 / 교훈
