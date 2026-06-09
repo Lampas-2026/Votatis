@@ -97,6 +97,7 @@ export default function ReportWizard() {
   const [attached, setAttached] = useState<Attached[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const [consent, setConsent] = useState(false);
 
   const [token, setToken] = useState<string | null>(null);
@@ -527,7 +528,25 @@ export default function ReportWizard() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={processing}
-                className="mt-2 flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 px-4 py-8 text-center transition-colors hover:border-red-300 hover:bg-red-50/40 disabled:cursor-not-allowed disabled:opacity-60"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  if (!dragging) setDragging(true);
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  setDragging(false);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setDragging(false);
+                  const dropped = Array.from(e.dataTransfer.files ?? []);
+                  if (dropped.length) void handleFiles(dropped);
+                }}
+                className={`mt-2 flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                  dragging
+                    ? "border-red-400 bg-red-50"
+                    : "border-gray-300 hover:border-red-300 hover:bg-red-50/40"
+                }`}
               >
                 <span className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-red-500">
                   <span className="material-symbols-outlined" style={{ fontSize: "28px" }} aria-hidden="true">
@@ -535,6 +554,7 @@ export default function ReportWizard() {
                   </span>
                 </span>
                 <span className="text-sm font-medium text-gray-700">카메라로 촬영 · 사진 선택</span>
+                <span className="text-xs text-gray-400">또는 이미지를 여기로 드래그&드롭</span>
               </button>
 
               {processing && (
