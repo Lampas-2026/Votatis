@@ -46,11 +46,12 @@ interface Props {
   placeholder?: string;
   id?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 const MAX_SUGGESTIONS = 20;
 
-export default function RegionAutocomplete({ onChange, placeholder, id, className }: Props) {
+export default function RegionAutocomplete({ onChange, placeholder, id, className, disabled }: Props) {
   const [query, setQuery] = useState("");
   const [data, setData] = useState<RegionEntry[] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -97,6 +98,7 @@ export default function RegionAutocomplete({ onChange, placeholder, id, classNam
   }, []);
 
   function setText(text: string) {
+    if (disabled) return;
     setQuery(text);
     setOpen(true);
     // 입력할 때마다 첫 후보를 기본 하이라이트(여기서 Enter 치면 맨 위가 선택됨)
@@ -138,11 +140,13 @@ export default function RegionAutocomplete({ onChange, placeholder, id, classNam
       <input
         id={id}
         type="text"
-        className={className}
+        className={`${className ?? ""} disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400`}
         value={query}
         placeholder={placeholder}
         autoComplete="off"
+        disabled={disabled}
         onFocus={() => {
+          if (disabled) return;
           ensureData();
           if (query) setOpen(true);
         }}

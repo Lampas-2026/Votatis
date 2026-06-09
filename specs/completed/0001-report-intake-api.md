@@ -122,3 +122,5 @@ related:
 - 2026-06-09: OpenAPI 3.1 문서 제공 추가 — `GET /openapi.json`(스펙) + `GET /reference`(`/docs` alias, Scalar API Reference UI, CDN standalone). 의존성 추가 없음. (요청: 채팅)
 - 2026-06-09: 출처 규칙 완화 — source 항목이 `url`(웹사이트) 또는 `text`(직접 입력) 중 하나면 유효. `sources`는 더 이상 필수가 아니며 출처(URL/텍스트)·첨부 중 최소 하나만 있으면 등록 가능. (요청: 채팅)
 - 2026-06-10: 입력 스키마에서 `counting_unit`(개표 단위) 제거 — 불필요 데이터로 판단. `types.ts`·`openapi.ts`·Issue 본문(`github.ts`)에서 삭제. 클라(웹앱)도 함께 제거. (요청: 채팅)
+- 2026-06-10: `SubmissionInput.consent`(익명 제보·공개 동의) 추가 — types/openapi/Issue 본문 기록 + vitest. (요청: 채팅, spec 0004)
+- 2026-06-10: `wrangler.jsonc` KV·R2에 `preview_id`/`preview_bucket_name`(프로덕션 재사용) 추가 — `wrangler dev --remote`로 첨부 포함 흐름을 로컬에서 검증 가능하게. 운영 동작 불변. (요청: 채팅)

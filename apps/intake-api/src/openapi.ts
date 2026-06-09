@@ -176,6 +176,10 @@ export const openapiSpec = {
             items: {},
             description: "클라이언트가 추출한 EXIF 요약. 원본 이미지는 서버를 경유하지 않는다.",
           },
+          consent: {
+            type: "boolean",
+            description: "익명 제보·공개 동의 여부. 실명·연락처는 저장하지 않는다.",
+          },
           turnstile_token: { type: "string", description: "Cloudflare Turnstile 토큰 (필수)" },
         },
       },

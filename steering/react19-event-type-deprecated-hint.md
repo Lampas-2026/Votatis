@@ -2,7 +2,7 @@
 tldr: @types/react 19에선 React.FormEvent·FormEventHandler 등 이벤트 타입 별칭이 @deprecated라 astro check가 ts(6385) hint를 낸다. 회피: 핸들러에 명시 타입 주석을 달지 말고 JSX 이벤트 prop에 인라인 (e)=>{...}로 써서 e 타입을 추론시킨다.
 tags: [pitfall, react, typescript, astro]
 last_retrieved: 2026-06-10
-retrieval_count: 0
+retrieval_count: 2
 ---
 
 ## 규칙 / 교훈

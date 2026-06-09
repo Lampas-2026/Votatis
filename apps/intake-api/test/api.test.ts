@@ -252,12 +252,14 @@ describe("유닛: 검증/스키마", () => {
         election: "제8회 전국동시지방선거",
         title: "제목",
         sources: [{ url: "https://example.com" }],
+        consent: true,
       },
       staging: [],
     };
     const body = buildIssueBody(pending, []);
     expect(body).toContain('submitter: "anon-deadbeef"');
     expect(body).toContain('status: "unverified"');
+    expect(body).toContain("consent: true");
   });
 });
 

@@ -55,6 +55,7 @@ export function buildIssueBody(p: PendingSubmission, attachments: FinalizedAttac
     lines.push(`    size: ${a.size}`);
   }
   lines.push(`submitter: "${p.submitter}"`);
+  lines.push(`consent: ${i.consent ? "true" : "false"}`);
   lines.push(`license: "CC-BY-4.0"`);
   lines.push("---");
   lines.push("");

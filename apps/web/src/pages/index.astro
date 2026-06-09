@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import ReportForm from "../components/ReportForm.tsx";
+import ReportWizard from "../components/ReportWizard.tsx";
 ---
 
 <Base title="제보하기 · Votatis">
@@ -13,6 +13,6 @@ import ReportForm from "../components/ReportForm.tsx";
       </p>
     </header>
     <!-- 인터랙션이 필요한 폼만 React island 로 하이드레이션 (콘텐츠는 zero-JS) -->
-    <ReportForm client:load />
+    <ReportWizard client:load />
   </main>
 </Base>

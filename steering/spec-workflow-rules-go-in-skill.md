@@ -1,8 +1,8 @@
 ---
 tldr: 스펙 스킬(spec-create/spec-implement/spec-review)의 워크플로우 규칙은 steering에 두지 말고 해당 SKILL.md 본문에 직접 녹인다.
 tags: [convention, workflow, spec, steering]
-last_retrieved: 2026-06-09
-retrieval_count: 0
+last_retrieved: 2026-06-10
+retrieval_count: 1
 ---
 
 ## 규칙 / 교훈

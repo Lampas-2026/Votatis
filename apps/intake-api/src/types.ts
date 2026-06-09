@@ -53,6 +53,7 @@ export interface SubmissionInput {
   sources?: SourceInput[]; // 출처(URL/텍스트) 또는 attachments 중 최소 하나 필요.
   attachments?: AttachmentInput[];
   exif?: unknown[]; // 클라이언트가 추출한 EXIF 요약. 원본 이미지는 서버를 경유하지 않는다.
+  consent?: boolean; // 익명 제보·공개 동의 여부(실명·연락처는 미저장).
   turnstile_token: string;
 }
 

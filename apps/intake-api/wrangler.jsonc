@@ -6,10 +6,21 @@
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
   "r2_buckets": [
-    { "binding": "EVIDENCE_BUCKET", "bucket_name": "votatis-evidence" }
+    // preview_bucket_name 은 `wrangler dev --remote` 용. presigned PUT 이 실 버킷을 가리키므로
+    // finalize 가 같은 버킷을 읽도록 프로덕션 버킷을 그대로 재사용한다.
+    {
+      "binding": "EVIDENCE_BUCKET",
+      "bucket_name": "votatis-evidence",
+      "preview_bucket_name": "votatis-evidence"
+    }
   ],
   "kv_namespaces": [
-    { "binding": "PENDING_KV", "id": "c6c9431e178e4395a77e9b77f86c0fa2" }
+    // preview_id 는 `wrangler dev --remote` 용. 소규모라 프로덕션 네임스페이스를 그대로 재사용한다.
+    {
+      "binding": "PENDING_KV",
+      "id": "c6c9431e178e4395a77e9b77f86c0fa2",
+      "preview_id": "c6c9431e178e4395a77e9b77f86c0fa2"
+    }
   ],
   "vars": {
     "ALLOWED_ORIGIN": "http://localhost:5173",

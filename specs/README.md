@@ -16,3 +16,4 @@ specs/
 | 0001 | 제보 수집 API | completed | 2026-06-09 | 2026-06-10 | completed/0001-report-intake-api.md |
 | 0002 | 개발환경 GitHub Issue 시뮬레이션 | completed | 2026-06-09 | 2026-06-09 | completed/0002-dev-github-issue-simulation.md |
 | 0003 | 제보 웹앱 (임시) | completed | 2026-06-09 | 2026-06-10 | completed/0003-report-web-app.md |
+| 0004 | 제보 플로우 (4단계 마법사) | completed | 2026-06-10 | 2026-06-10 | completed/0004-report-flow-wizard.md |
