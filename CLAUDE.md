@@ -1,5 +1,12 @@
 # CLAUDE.md
 
+## 프로젝트 구조 (모노레포)
+
+- 코드(앱·서비스·패키지)는 `apps/<name>/` 아래에 둔다. pnpm workspace(`pnpm-workspace.yaml`의 `apps/*`)로 묶는다. 예: `apps/intake-api/`(제보 수집 Worker).
+- 루트에는 공통만 둔다: `specs/`, `steering/`, `docs/`, `.claude/`, 워크스페이스 설정(루트 `package.json`, `pnpm-workspace.yaml`, 단일 `pnpm-lock.yaml`).
+- 새 앱/서비스는 루트가 아니라 새 디렉터리 `apps/<name>/`로 추가한다.
+- 루트에서 `pnpm -r test` / `pnpm -r typecheck`로 전체를, `pnpm --filter <pkg> ...`로 개별 패키지를 다룬다.
+
 ## Steering — 프로젝트 지식 저장소 (필수 정책)
 
 `steering/`는 작업하면서 쌓인 규칙과 반복하면 안 되는 실수를 누적하는 디렉터리다.

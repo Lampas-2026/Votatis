@@ -6,7 +6,9 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  apps/intake-api:
     dependencies:
       aws4fetch:
         specifier: ^1.0.20

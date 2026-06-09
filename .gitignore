@@ -222,3 +222,5 @@ node_modules/
 .wrangler/
 .dev.vars
 dist/
+
+.prod.vars

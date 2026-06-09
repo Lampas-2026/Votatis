@@ -51,3 +51,4 @@ retrieval_count: 0           # 참조된 누적 횟수
 |------|------|------|------------|------|
 | [spec-create-workflow.md](spec-create-workflow.md) | 스펙 작성 시 ①기능·기술 고려사항을 먼저 질문하고 ②완성 후 "이대로 갈까요?" 확인받는다. | convention, workflow, spec | 2026-06-09 | 1 |
 | [cloudflare-vitest-pool-workers-setup.md](cloudflare-vitest-pool-workers-setup.md) | Worker 테스트 셋업 3대 함정: nodejs_compat 플래그, isolatedStorage:false, pnpm onlyBuiltDependencies. | pitfall, cloudflare, testing, pnpm | 2026-06-09 | 0 |
+| [monorepo-apps-layout.md](monorepo-apps-layout.md) | 코드는 apps/&lt;name&gt;/ 아래 pnpm workspace로. 루트는 specs/steering/docs/공통설정만. | convention, project, monorepo, pnpm | 2026-06-09 | 0 |
