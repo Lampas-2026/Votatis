@@ -124,3 +124,4 @@ related:
 - 2026-06-10: 입력 스키마에서 `counting_unit`(개표 단위) 제거 — 불필요 데이터로 판단. `types.ts`·`openapi.ts`·Issue 본문(`github.ts`)에서 삭제. 클라(웹앱)도 함께 제거. (요청: 채팅)
 - 2026-06-10: `SubmissionInput.consent`(익명 제보·공개 동의) 추가 — types/openapi/Issue 본문 기록 + vitest. (요청: 채팅, spec 0004)
 - 2026-06-10: `wrangler.jsonc` KV·R2에 `preview_id`/`preview_bucket_name`(프로덕션 재사용) 추가 — `wrangler dev --remote`로 첨부 포함 흐름을 로컬에서 검증 가능하게. 운영 동작 불변. (요청: 채팅)
+- 2026-06-10: CORS를 다중 오리진으로 — `ALLOWED_ORIGIN`을 쉼표 구분 목록으로 파싱(`cors.ts`), 값에 로컬(`localhost:5173`)+배포(`votatis-web.pages.dev`) 추가. R2 버킷 CORS(`r2-cors.json`)도 두 오리진 허용. 프런트 Cloudflare Pages 배포 대비. (요청: 채팅)

@@ -1,7 +1,10 @@
 import type { Env } from "./types";
 
 export function isOriginAllowed(env: Env, origin: string | null): boolean {
-  return origin !== null && origin === env.ALLOWED_ORIGIN;
+  if (origin === null) return false;
+  // ALLOWED_ORIGIN 은 쉼표로 구분된 다중 오리진을 허용한다(예: 로컬 dev + 배포 도메인).
+  const allowed = env.ALLOWED_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
+  return allowed.includes(origin);
 }
 
 /** 허용된 오리진일 때만 ACAO 헤더를 반환한다. 그 외엔 빈 객체. */
