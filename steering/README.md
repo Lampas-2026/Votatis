@@ -53,3 +53,4 @@ retrieval_count: 0           # 참조된 누적 횟수
 | [monorepo-apps-layout.md](monorepo-apps-layout.md) | 코드는 apps/&lt;name&gt;/ 아래 pnpm workspace로. 루트는 specs/steering/docs/공통설정만. | convention, project, monorepo, pnpm | 2026-06-09 | 0 |
 | [pnpm-filter-run-script.md](pnpm-filter-run-script.md) | package.json의 deploy 같은 스크립트는 `pnpm --filter <pkg> run deploy`로. run 없이 쓰면 pnpm 내장 deploy와 충돌. | pitfall, pnpm, monorepo | 2026-06-09 | 2 |
 | [intake-api-local-flow-test.md](intake-api-local-flow-test.md) | intake-api 로컬 wrangler dev 라이브 테스트: --var로 SIMULATE_GITHUB·turnstile 테스트키 주입 + 첨부 없이 텍스트 출처만 제출로 presigned R2 PUT 회피. | pitfall, testing, cloudflare, intake-api | 2026-06-09 | 1 |
+| [spec-workflow-rules-go-in-skill.md](spec-workflow-rules-go-in-skill.md) | 스펙 스킬(spec-create/implement/review)의 워크플로우 규칙은 steering이 아니라 해당 SKILL.md 본문에 둔다. | convention, workflow, spec, steering | 2026-06-09 | 0 |
