@@ -49,7 +49,7 @@ retrieval_count: 0           # 참조된 누적 횟수
 
 | 파일 | tldr | tags | 마지막 회수 | 회수 |
 |------|------|------|------------|------|
-| [spec-create-workflow.md](spec-create-workflow.md) | 스펙 작성 시 ①기능·기술 고려사항을 먼저 질문하고 ②완성 후 "이대로 갈까요?" 확인받는다. | convention, workflow, spec | 2026-06-09 | 1 |
 | [cloudflare-vitest-pool-workers-setup.md](cloudflare-vitest-pool-workers-setup.md) | Worker 테스트 셋업 3대 함정: nodejs_compat 플래그, isolatedStorage:false, pnpm onlyBuiltDependencies. | pitfall, cloudflare, testing, pnpm | 2026-06-09 | 0 |
 | [monorepo-apps-layout.md](monorepo-apps-layout.md) | 코드는 apps/&lt;name&gt;/ 아래 pnpm workspace로. 루트는 specs/steering/docs/공통설정만. | convention, project, monorepo, pnpm | 2026-06-09 | 0 |
-| [pnpm-filter-run-script.md](pnpm-filter-run-script.md) | package.json의 deploy 같은 스크립트는 `pnpm --filter <pkg> run deploy`로. run 없이 쓰면 pnpm 내장 deploy와 충돌. | pitfall, pnpm, monorepo | 2026-06-09 | 1 |
+| [pnpm-filter-run-script.md](pnpm-filter-run-script.md) | package.json의 deploy 같은 스크립트는 `pnpm --filter <pkg> run deploy`로. run 없이 쓰면 pnpm 내장 deploy와 충돌. | pitfall, pnpm, monorepo | 2026-06-09 | 2 |
+| [intake-api-local-flow-test.md](intake-api-local-flow-test.md) | intake-api 로컬 wrangler dev 라이브 테스트: --var로 SIMULATE_GITHUB·turnstile 테스트키 주입 + 첨부 없이 텍스트 출처만 제출로 presigned R2 PUT 회피. | pitfall, testing, cloudflare, intake-api | 2026-06-09 | 1 |
