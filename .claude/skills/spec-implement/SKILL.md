@@ -25,7 +25,7 @@ specs/not-started/<NNNN>-<slug>.md
 4. **계획 수립** — 완료 조건(Acceptance Criteria) 각 항목을 작업 단위로 분해한다.
 5. **구현** — 기존 코드 스타일·컨벤션을 따른다. 완료 조건을 하나씩 충족시킨다.
 6. **검증** — 테스트/실행으로 동작을 확인하고 완료 조건 체크리스트를 채운다.
-7. **완료 처리** — 모든 완료 조건 충족 시 파일을 `specs/completed/`로 옮기고 `status: completed`로 갱신한다. (먼저 [[spec-review]]를 거치는 것을 권장)
+7. **spec-review로 인계 (필수)** — 구현·검증이 끝나면 **스스로 `completed`로 옮기지 않는다.** 스펙은 `in-progress`에 둔 채 곧바로 [[spec-review]] 스킬을 실행해 검토로 넘긴다. `completed`로의 이동·`status` 갱신은 spec-review가 통과 판정을 내릴 때만 일어난다.
 
 ## 원칙
 
