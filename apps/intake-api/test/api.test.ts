@@ -4,7 +4,7 @@ import {
   waitOnExecutionContext,
   fetchMock,
 } from "cloudflare:test";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import worker from "../src/index";
 import { buildIssueBody } from "../src/github";
 import { createAppJWT } from "../src/github-app";
@@ -33,6 +33,10 @@ async function call(request: Request): Promise<Response> {
   const res = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
   return res;
+}
+
+function get(path: string): Request {
+  return new Request(`https://api.test${path}`, { method: "GET" });
 }
 
 function mockTurnstile(success: boolean, times = 1) {
@@ -233,6 +237,11 @@ describe("유닛: 검증/스키마", () => {
     expect(parts[2].length).toBeGreaterThan(100); // 서명 존재
   });
 
+  it("시뮬레이션 off(기본)면 /simulate/issues 는 404", async () => {
+    const res = await call(get("/simulate/issues"));
+    expect(res.status).toBe(404);
+  });
+
   it("Issue 본문에 익명 submitter + unverified status, 실명 없음", () => {
     const pending: PendingSubmission = {
       submission_id: "abc123",
@@ -249,5 +258,66 @@ describe("유닛: 검증/스키마", () => {
     const body = buildIssueBody(pending, []);
     expect(body).toContain('submitter: "anon-deadbeef"');
     expect(body).toContain('status: "unverified"');
+  });
+});
+
+describe("시뮬레이션 모드 (SIMULATE_GITHUB)", () => {
+  // 이 describe 동안만 플래그를 켠다. GitHub fetchMock 을 걸지 않으므로,
+  // 코드가 api.github.com 을 치면 disableNetConnect 로 실패 → 200 이면 호출 안 했다는 증거.
+  beforeAll(() => {
+    env.SIMULATE_GITHUB = "true";
+  });
+  afterAll(() => {
+    env.SIMULATE_GITHUB = undefined;
+  });
+
+  async function startSubmission(ip: string) {
+    mockTurnstile(true);
+    const res = await call(post("/submissions", validBody(), { ip }));
+    return (await res.json()) as {
+      submission_id: string;
+      finalize_token: string;
+      uploads: { staging_key: string; put_url: string }[];
+    };
+  }
+
+  it("finalize 가 GitHub API 없이 가짜 issue_url 을 반환", async () => {
+    const s = await startSubmission("10.2.0.1");
+    await env.EVIDENCE_BUCKET.put(s.uploads[0].staging_key, JPEG);
+
+    const res = await call(
+      post(`/submissions/${s.submission_id}/finalize`, { finalize_token: s.finalize_token }, { ip: "10.2.0.1" }),
+    );
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as { issue_url: string; attachments: unknown[] };
+    expect(data.issue_url).toContain("/simulate/issues/");
+    expect(data.attachments).toHaveLength(1);
+  });
+
+  it("GET /simulate/issues 목록 + /simulate/issues/{n} 렌더된 본문 조회", async () => {
+    const s = await startSubmission("10.2.0.2");
+    await env.EVIDENCE_BUCKET.put(s.uploads[0].staging_key, JPEG);
+    const fin = await call(
+      post(`/submissions/${s.submission_id}/finalize`, { finalize_token: s.finalize_token }, { ip: "10.2.0.2" }),
+    );
+    const { issue_url } = (await fin.json()) as { issue_url: string };
+    const n = issue_url.split("/").pop()!;
+
+    const listRes = await call(get("/simulate/issues"));
+    expect(listRes.status).toBe(200);
+    const { issues } = (await listRes.json()) as {
+      issues: { number: number; title: string; url: string }[];
+    };
+    expect(issues.length).toBeGreaterThan(0);
+    expect(issues.some((i) => String(i.number) === n)).toBe(true);
+
+    const detRes = await call(get(`/simulate/issues/${n}`));
+    expect(detRes.status).toBe(200);
+    expect(detRes.headers.get("content-type")).toContain("text/markdown");
+    const body = await detRes.text();
+    expect(body).toContain('status: "unverified"');
+
+    const missing = await call(get("/simulate/issues/999999"));
+    expect(missing.status).toBe(404);
   });
 });

@@ -15,6 +15,9 @@ export interface Env {
   GITHUB_APP_PRIVATE_KEY: string; // PEM (PKCS#1 또는 PKCS#8)
   R2_ACCESS_KEY_ID: string;
   R2_SECRET_ACCESS_KEY: string;
+
+  // Dev 전용 토글 (.dev.vars 에만 둔다. 운영 미설정)
+  SIMULATE_GITHUB?: string; // "true"/"1" 이면 GitHub Issue 생성을 시뮬레이션
 }
 
 export interface SourceInput {

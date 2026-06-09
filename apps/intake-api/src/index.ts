@@ -2,6 +2,7 @@ import type { Env } from "./types";
 import { preflight } from "./cors";
 import { handleSubmissions } from "./submissions";
 import { handleFinalize } from "./finalize";
+import { isSimulateGithub, handleSimIssuesRequest } from "./github";
 import { openapiSpec, referenceHtml } from "./openapi";
 
 const FINALIZE_RE = /^\/submissions\/([^/]+)\/finalize$/;
@@ -37,6 +38,15 @@ export default {
         status: 200,
         headers: { "content-type": "text/html; charset=utf-8" },
       });
+    }
+
+    // dev 전용: 시뮬레이션 모드에서만 가짜 Issue 조회 경로를 노출한다. 운영(off)에선 404.
+    if (
+      request.method === "GET" &&
+      isSimulateGithub(env) &&
+      (url.pathname === "/simulate/issues" || url.pathname.startsWith("/simulate/issues/"))
+    ) {
+      return handleSimIssuesRequest(env, url);
     }
 
     return new Response("Not Found", { status: 404 });

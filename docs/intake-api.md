@@ -118,6 +118,18 @@ curl -X POST http://localhost:8787/submissions \
 
 응답의 `uploads[].put_url`로 파일을 PUT(`--remote`일 때 실제 R2), 그 다음 `finalize_token`으로 `POST /submissions/{id}/finalize`.
 
+### GitHub 없이 로컬에서 finalize까지 돌리기 (시뮬레이션 모드)
+
+finalize는 원래 GitHub App 인증으로 실제 Issue를 만든다. 로컬에서 App 셋업 없이 전 흐름을 돌리려면 `.dev.vars`에 아래를 켠다.
+
+```bash
+SIMULATE_GITHUB="true"
+```
+
+- 켜지면 finalize가 `api.github.com`을 호출하지 않고 가짜 Issue를 만들어 `issue_url`로 `/simulate/issues/{n}`을 돌려준다. `GITHUB_APP_ID`/`GITHUB_APP_PRIVATE_KEY`는 비어 있어도 된다.
+- 가짜 Issue 확인: `GET /simulate/issues`(목록 JSON), `GET /simulate/issues/{n}`(생성됐을 Issue 본문, `text/markdown`).
+- 이 경로들은 **시뮬레이션 모드에서만** 열린다. 플래그가 없으면 404 → 운영엔 노출되지 않는다. 스펙: [`specs/.../0002-dev-github-issue-simulation.md`](../specs/in-progress/0002-dev-github-issue-simulation.md).
+
 ## 5. Turnstile — 테스트/개발에서 우회하기
 
 Cloudflare가 제공하는 **공식 테스트 키**를 쓴다. 실제 사람 인증 없이 항상 통과/실패시킬 수 있다.

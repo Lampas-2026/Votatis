@@ -5,3 +5,7 @@ GITHUB_APP_ID="123456"
 GITHUB_APP_PRIVATE_KEY=""
 R2_ACCESS_KEY_ID="..."
 R2_SECRET_ACCESS_KEY="..."
+
+# (선택) 개발용: GitHub Issue 생성을 시뮬레이션한다. 켜면 GitHub App secrets 없이도 finalize 가 동작하고,
+# 가짜 Issue 는 /.simulate/issues 경로에서 확인할 수 있다. 운영엔 절대 두지 말 것.
+# SIMULATE_GITHUB="true"
