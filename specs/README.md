@@ -13,5 +13,6 @@ specs/
 
 | ID | 제목 | 상태 | 생성일 | 갱신일 | 파일 |
 |----|------|------|--------|--------|------|
-| 0001 | 제보 수집 API | completed | 2026-06-09 | 2026-06-09 | completed/0001-report-intake-api.md |
+| 0001 | 제보 수집 API | completed | 2026-06-09 | 2026-06-10 | completed/0001-report-intake-api.md |
 | 0002 | 개발환경 GitHub Issue 시뮬레이션 | completed | 2026-06-09 | 2026-06-09 | completed/0002-dev-github-issue-simulation.md |
+| 0003 | 제보 웹앱 (임시) | completed | 2026-06-09 | 2026-06-10 | completed/0003-report-web-app.md |

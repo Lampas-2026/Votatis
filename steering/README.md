@@ -50,7 +50,11 @@ retrieval_count: 0           # 참조된 누적 횟수
 | 파일 | tldr | tags | 마지막 회수 | 회수 |
 |------|------|------|------------|------|
 | [cloudflare-vitest-pool-workers-setup.md](cloudflare-vitest-pool-workers-setup.md) | Worker 테스트 셋업 3대 함정: nodejs_compat 플래그, isolatedStorage:false, pnpm onlyBuiltDependencies. | pitfall, cloudflare, testing, pnpm | 2026-06-09 | 0 |
-| [monorepo-apps-layout.md](monorepo-apps-layout.md) | 코드는 apps/&lt;name&gt;/ 아래 pnpm workspace로. 루트는 specs/steering/docs/공통설정만. | convention, project, monorepo, pnpm | 2026-06-09 | 0 |
+| [monorepo-apps-layout.md](monorepo-apps-layout.md) | 코드는 apps/&lt;name&gt;/ 아래 pnpm workspace로. 루트는 specs/steering/docs/공통설정만. | convention, project, monorepo, pnpm | 2026-06-10 | 2 |
 | [pnpm-filter-run-script.md](pnpm-filter-run-script.md) | package.json의 deploy 같은 스크립트는 `pnpm --filter <pkg> run deploy`로. run 없이 쓰면 pnpm 내장 deploy와 충돌. | pitfall, pnpm, monorepo | 2026-06-09 | 2 |
-| [intake-api-local-flow-test.md](intake-api-local-flow-test.md) | intake-api 로컬 wrangler dev 라이브 테스트: --var로 SIMULATE_GITHUB·turnstile 테스트키 주입 + 첨부 없이 텍스트 출처만 제출로 presigned R2 PUT 회피. | pitfall, testing, cloudflare, intake-api | 2026-06-09 | 1 |
+| [korea-region-dataset.md](korea-region-dataset.md) | 전국 행정구역 데이터. "내손1동"처럼 분동·생활 단위가 필요하면 행정동, "리"가 필요하면 법정동. 행정동은 juso administrationCode.tsv(행안부 기준 매일 갱신, 키 불필요)로 만들고 출장소 제외·세종 단층·전북 명칭만 보정. | reference, data, korea-region | 2026-06-10 | 1 |
+| [intake-api-local-flow-test.md](intake-api-local-flow-test.md) | intake-api 로컬 wrangler dev 라이브 테스트: --var로 SIMULATE_GITHUB·turnstile 테스트키 주입 + 첨부 없이 텍스트 출처만 제출로 presigned R2 PUT 회피. | pitfall, testing, cloudflare, intake-api | 2026-06-10 | 3 |
 | [spec-workflow-rules-go-in-skill.md](spec-workflow-rules-go-in-skill.md) | 스펙 스킬(spec-create/implement/review)의 워크플로우 규칙은 steering이 아니라 해당 SKILL.md 본문에 둔다. | convention, workflow, spec, steering | 2026-06-09 | 0 |
+| [web-dev-port-cors.md](web-dev-port-cors.md) | apps/web(Astro) dev는 포트 5173으로(기본 4321). intake-api ALLOWED_ORIGIN=localhost:5173과 정합해야 CORS 통과. 폴백 시 --var ALLOWED_ORIGIN으로 맞춰라. | pitfall, cors, web, intake-api | 2026-06-10 | 2 |
+| [react19-event-type-deprecated-hint.md](react19-event-type-deprecated-hint.md) | @types/react 19에서 React.FormEvent·FormEventHandler가 @deprecated → astro check ts(6385) hint. 핸들러는 타입 주석 없이 JSX prop 인라인 (e)=>로 추론시켜 회피. | pitfall, react, typescript, astro | 2026-06-10 | 0 |
+| [react-ime-composing-enter.md](react-ime-composing-enter.md) | React 입력에서 한글 IME 조합 중 Enter는 조합 확정용 → onKeyDown 맨 앞 ev.nativeEvent.isComposing이면 return. 안 하면 자동완성 선택과 충돌해 "내손2동동"처럼 글자 겹침. | pitfall, react, korean, ime | 2026-06-10 | 0 |

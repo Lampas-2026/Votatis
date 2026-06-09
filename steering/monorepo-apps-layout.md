@@ -1,8 +1,8 @@
 ---
 tldr: 코드(앱·서비스·패키지)는 항상 apps/<name>/ 아래에 두고 pnpm workspace로 묶는다. 루트는 specs/steering/docs/공통설정만. 새 코드는 루트가 아니라 apps/<name>/로 추가한다.
 tags: [convention, project, monorepo, pnpm]
-last_retrieved: 2026-06-09
-retrieval_count: 0
+last_retrieved: 2026-06-10
+retrieval_count: 2
 ---
 
 ## 규칙 / 교훈

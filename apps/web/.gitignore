@@ -1,0 +1,10 @@
+# build output
+dist/
+# generated types
+.astro/
+# dependencies
+node_modules/
+# environment (PUBLIC_* 값은 .env.example 참고)
+.env
+.env.*
+!.env.example

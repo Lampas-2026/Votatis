@@ -1,8 +1,8 @@
 ---
 tldr: intake-api를 로컬 wrangler dev로 끝까지 찔러볼 땐 ①--var로 SIMULATE_GITHUB:true·TURNSTILE_SECRET 테스트키 주입(.dev.vars 안 건드림) ②첨부 없이 텍스트 출처만 제출(presigned R2 PUT 단계 회피)로 finalize까지 한 번에 돈다.
 tags: [pitfall, testing, cloudflare, intake-api]
-last_retrieved: 2026-06-09
-retrieval_count: 1
+last_retrieved: 2026-06-10
+retrieval_count: 3
 ---
 
 ## 규칙 / 교훈

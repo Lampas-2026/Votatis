@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+
+// 빌드 시 dist/404.html 로 생성된다 (GitHub Pages 자동 인식).
+const home = import.meta.env.BASE_URL;
+---
+
+<Base title="페이지를 찾을 수 없습니다 · Votatis">
+  <main class="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-4 text-center">
+    <p class="text-5xl font-bold text-gray-300">404</p>
+    <h1 class="mt-4 text-xl font-semibold">페이지를 찾을 수 없습니다</h1>
+    <a href={home} class="mt-6 text-sm font-medium text-blue-600 hover:underline">
+      제보 페이지로 돌아가기
+    </a>
+  </main>
+</Base>
