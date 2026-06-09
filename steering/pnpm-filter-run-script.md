@@ -1,8 +1,8 @@
 ---
 tldr: package.json의 deploy 같은 스크립트는 `pnpm --filter <pkg> run deploy`로 실행한다. `run` 없이 쓰면 pnpm 내장 deploy 명령과 충돌해 ERR_PNPM_INVALID_DEPLOY_TARGET.
 tags: [pitfall, pnpm, monorepo]
-last_retrieved: 2026-06-09
-retrieval_count: 2
+last_retrieved: 2026-06-10
+retrieval_count: 3
 ---
 
 ## 규칙 / 교훈
