@@ -15,7 +15,8 @@ description: 새 기능/작업의 스펙 문서를 specs/not-started/ 아래에 
 specs/
   not-started/   # 작성됐지만 아직 구현 시작 전
   in-progress/   # 구현 중
-  completed/     # 구현·검토 완료
+  in-review/     # 구현·검증 완료, 검토 대기
+  completed/     # 검토 통과
 ```
 
 - 파일명: `<NNNN>-<slug>.md` (예: `0001-report-intake-api.md`). 스펙 한 건 = 파일 한 개.
@@ -26,7 +27,7 @@ specs/
 ## 작업 순서
 
 1. **컨텍스트 파악** — `docs/`(특히 PRD), 관련 기존 코드, 기존 `specs/`를 읽어 중복·전제를 확인한다.
-2. **번호 결정** — `specs/{not-started,in-progress,completed}`를 모두 보고 다음 일련번호를 정한다.
+2. **번호 결정** — `specs/{not-started,in-progress,in-review,completed}`를 모두 보고 다음 일련번호를 정한다.
 3. **범위 합의** — 무엇을 만들지 정해지면 곧바로 작성하지 말고, **기능적·기술적으로 고려해야 할 사항(요구사항·엣지케이스·기술 선택지·제약)을 사용자에게 먼저 질문**해 확정한다. 추측으로 굳히지 않는다. 사용자 머릿속 요구사항·제약을 끌어내기 전에 스펙을 굳히면 빠진 가정으로 잘못된 방향이 된다.
 4. **Best Practice 리서치** — 아래 "Best Practice 리서치" 절차를 따라 웹에서 모범 사례를 찾고, **무엇을 적용할지 사용자가 직접 고르게 한다.**
 5. **스펙 작성** — 합의된 범위 + 사용자가 선택한 Best Practice를 반영해 아래 템플릿으로 `specs/not-started/<NNNN>-<slug>.md`를 만든다.
@@ -60,7 +61,7 @@ specs/
 ---
 id: "0001"
 title: <스펙 제목>
-status: not-started   # not-started | in-progress | completed
+status: not-started   # not-started | in-progress | in-review | completed
 created: <YYYY-MM-DD>
 updated: <YYYY-MM-DD>
 related: []           # PRD 섹션, 이슈, 관련 스펙

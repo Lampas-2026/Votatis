@@ -19,7 +19,7 @@
 
 ## 스펙 주도 개발
 
-기능 작업은 `specs/`의 스펙으로 관리한다. 상태별 디렉터리(`not-started` / `in-progress` / `completed`)로 분류하며 상태 전환은 파일 이동으로 표현한다. 전체 목록은 `specs/README.md` 인덱스에서 관리하며, 스펙을 추가·이동·삭제하면 인덱스를 즉시 동기화한다. 스킬: `spec-create`, `spec-implement`, `spec-review`.
+기능 작업은 `specs/`의 스펙으로 관리한다. 상태별 디렉터리(`not-started` / `in-progress` / `in-review` / `completed`)로 분류하며 상태 전환은 파일 이동으로 표현한다. spec-implement는 구현·검증이 끝나면 스펙을 `in-review`로 옮긴 뒤 spec-review로 인계하고, `completed`로의 이동은 spec-review 통과 시에만 일어난다. 전체 목록은 `specs/README.md` 인덱스에서 관리하며, 스펙을 추가·이동·삭제하면 인덱스를 즉시 동기화한다. 스킬: `spec-create`, `spec-implement`, `spec-review`.
 
 ### 스펙 Changelog (필수 정책)
 

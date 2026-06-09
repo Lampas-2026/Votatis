@@ -12,7 +12,8 @@ description: specs/not-started/의 스펙을 in-progress로 옮겨 코드로 구
 ```
 specs/not-started/<NNNN>-<slug>.md
    └─(구현 시작)→ specs/in-progress/<NNNN>-<slug>.md
-        └─(완료·검토)→ specs/completed/<NNNN>-<slug>.md
+        └─(구현·검증 완료)→ specs/in-review/<NNNN>-<slug>.md
+             └─(검토 통과)→ specs/completed/<NNNN>-<slug>.md
 ```
 
 파일을 이동할 때 frontmatter의 `status`와 `updated`, 그리고 `specs/README.md` 인덱스의 해당 행(상태·갱신일·파일 경로)도 함께 갱신한다.
@@ -25,7 +26,7 @@ specs/not-started/<NNNN>-<slug>.md
 4. **계획 수립** — 완료 조건(Acceptance Criteria) 각 항목을 작업 단위로 분해한다.
 5. **구현** — 기존 코드 스타일·컨벤션을 따른다. 완료 조건을 하나씩 충족시킨다.
 6. **검증** — 테스트/실행으로 동작을 확인하고 완료 조건 체크리스트를 채운다.
-7. **spec-review로 인계 (필수)** — 구현·검증이 끝나면 **스스로 `completed`로 옮기지 않는다.** 스펙은 `in-progress`에 둔 채 곧바로 [[spec-review]] 스킬을 실행해 검토로 넘긴다. `completed`로의 이동·`status` 갱신은 spec-review가 통과 판정을 내릴 때만 일어난다.
+7. **in-review로 이동 후 spec-review 인계 (필수)** — 구현·검증이 끝나면 **스스로 `completed`로 옮기지 않는다.** `git mv`로 파일을 `specs/in-review/`로 옮기고 `status: in-review`, `updated`를 갱신한 뒤(`specs/README.md` 인덱스 행도 동기화), 곧바로 [[spec-review]] 스킬을 실행해 검토로 넘긴다. `completed`로의 이동은 spec-review가 통과 판정을 내릴 때만 일어난다.
 
 ## 원칙
 
