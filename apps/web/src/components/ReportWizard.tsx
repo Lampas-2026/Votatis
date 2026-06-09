@@ -623,14 +623,6 @@ export default function ReportWizard() {
                 접수번호 #{issueNumber(result.issue_url)}
               </p>
             )}
-            <div className="mt-4 rounded-md bg-white p-3 text-left text-xs text-gray-600">
-              <p className="mb-1 font-medium text-gray-700">이후 처리</p>
-              <ol className="list-inside list-decimal space-y-0.5">
-                <li>R2 업로드 · SHA-256 봉인</li>
-                <li>검토 큐 등록</li>
-                <li>검증 후 공개 반영</li>
-              </ol>
-            </div>
             <button
               type="button"
               onClick={() => window.location.reload()}
