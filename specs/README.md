@@ -19,3 +19,4 @@ specs/
 | 0003 | 제보 웹앱 (임시) | completed | 2026-06-09 | 2026-06-10 | completed/0003-report-web-app.md |
 | 0004 | 제보 플로우 (4단계 마법사) | completed | 2026-06-10 | 2026-06-10 | completed/0004-report-flow-wizard.md |
 | 0005 | 랜딩 페이지 + 제보 페이지 분리 | completed | 2026-06-10 | 2026-06-10 | completed/0005-landing-page.md |
+| 0006 | D1 기반 제보 저장 + 정식 조회 API (Hono + OpenAPI + Zod) | completed | 2026-06-10 | 2026-06-10 | completed/0006-d1-report-store-api.md |

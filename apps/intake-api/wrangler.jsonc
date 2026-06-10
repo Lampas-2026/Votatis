@@ -14,21 +14,25 @@
       "preview_bucket_name": "votatis-evidence"
     }
   ],
-  "kv_namespaces": [
-    // preview_id 는 `wrangler dev --remote` 용. 소규모라 프로덕션 네임스페이스를 그대로 재사용한다.
+  "d1_databases": [
+    // 제보 저장소. 로컬(`wrangler dev`)·테스트는 로컬 SQLite, `--remote`/배포는 이 원격 D1 을 쓴다.
+    // 첨부 포함 흐름은 R2 가 실제 버킷이라야 하므로 `wrangler dev --remote` 로 돌린다.
     {
-      "binding": "PENDING_KV",
-      "id": "c6c9431e178e4395a77e9b77f86c0fa2",
-      "preview_id": "c6c9431e178e4395a77e9b77f86c0fa2"
+      "binding": "DB",
+      "database_name": "votatis-reports",
+      "database_id": "18dfa252-ead4-4c02-8fe4-a7ed6979be55",
+      "migrations_dir": "migrations"
     }
   ],
+  "triggers": {
+    // 만료된 pending(업로드 미완료) 레코드 정리. (cleanup.PENDING_TTL_MS 와 정합)
+    "crons": ["*/30 * * * *"]
+  },
   "vars": {
     "ALLOWED_ORIGIN": "http://localhost:5173,https://votatis-web.pages.dev",
-    "GITHUB_REPO": "3dulev/votatis-data",
     "R2_ACCOUNT_ID": "4691f0338d03a2e7d000403d13b66264",
-    "R2_BUCKET": "votatis-evidence",
-    "R2_PUBLIC_BASE_URL": "https://pub-a588ea51cac24b96b274092972b9bc20.r2.dev"
+    "R2_BUCKET": "votatis-evidence"
   }
   // Secrets (wrangler secret put / .dev.vars):
-  //   TURNSTILE_SECRET, GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
+  //   TURNSTILE_SECRET, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
 }

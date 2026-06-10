@@ -1,15 +1,3 @@
-/** JSON 응답 헬퍼. 추가 헤더(CORS 등)를 병합한다. */
-export function json(data: unknown, status = 200, headers: Record<string, string> = {}): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "content-type": "application/json; charset=utf-8", ...headers },
-  });
-}
-
-export function errorJson(message: string, status: number, headers: Record<string, string> = {}): Response {
-  return json({ error: message }, status, headers);
-}
-
 export async function sha256Hex(data: ArrayBuffer | Uint8Array): Promise<string> {
   const view = data instanceof Uint8Array ? data : new Uint8Array(data);
   const digest = await crypto.subtle.digest("SHA-256", view);

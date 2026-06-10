@@ -54,12 +54,6 @@ const progressLabel: Record<ProgressPhase, string> = {
   finalizing: "확정 및 등록 중…",
 };
 
-/** issue_url 끝의 번호를 접수번호로 추출. (/issues/123, /simulate/issues/3) */
-function issueNumber(url: string): string | null {
-  const m = url.match(/(\d+)\/?$/);
-  return m ? m[1] : null;
-}
-
 function errorMessageFor(err: unknown): string {
   if (err instanceof ApiError) {
     switch (err.status) {
@@ -638,9 +632,9 @@ export default function ReportWizard() {
             <p className="mt-1 text-sm text-green-700">
               검토 큐에 등록되었습니다. 사람이 출처를 대조한 뒤 공개 여부가 결정됩니다.
             </p>
-            {issueNumber(result.issue_url) && (
+            {result.report_id && (
               <p className="mt-3 font-mono text-sm font-semibold text-red-600">
-                접수번호 #{issueNumber(result.issue_url)}
+                접수번호 {result.report_id}
               </p>
             )}
             <button

@@ -20,4 +20,3 @@ gh 계정:
 
 ## 적용
 - PR 만들기: `gh api user`로 3dulev 확인 → `gh pr create --repo Lampas-2026/Votatis --base main --head 3dulev:<branch> ...`.
-- 데이터 레포 `3dulev/votatis-data` 의 **이슈 쓰기**는 gh 로는 막히고 별도다 → [[votatis-data-issue-edit-app-token]] (votatis-bot App 토큰).

@@ -2,7 +2,7 @@
 tldr: apps/web(Astro)를 로컬에서 intake-api와 붙일 땐 dev 서버를 포트 5173으로 띄워야 한다(Astro 기본은 4321). intake-api ALLOWED_ORIGIN이 http://localhost:5173이라 그래야 CORS가 통과. 포트가 점유돼 폴백되면 intake-api를 --var ALLOWED_ORIGIN으로 그 포트에 맞춰라.
 tags: [pitfall, cors, web, intake-api]
 last_retrieved: 2026-06-10
-retrieval_count: 2
+retrieval_count: 3
 ---
 
 ## 규칙 / 교훈
