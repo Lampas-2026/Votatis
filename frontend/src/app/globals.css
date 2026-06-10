@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* ── Votatis 디자인 토큰 (index 4.html / screens.html 기준) ───────────── */
+:root {
+  /* red scale */
+  --red: #dc2626;
+  --red-strong: #b91c1c;
+  --red-deep: #991b1b;
+  --red-bg: #fdeaea;
+  --red-line: #f5cccc;
+  --red-300: #ec9c9c;
+
+  /* gray scale */
+  --g900: #191f28;
+  --g800: #333d4b;
+  --g700: #4e5968;
+  --g600: #6b7684;
+  --g500: #8b95a1;
+  --g400: #b0b8c1;
+  --g300: #d1d6db;
+  --g200: #e5e8eb;
+  --g100: #f2f4f6;
+  --g50: #f9fafb;
+  --bg: #ffffff;
+
+  /* radii */
+  --r-lg: 24px;
+  --r-md: 18px;
+  --r-sm: 12px;
+
+  /* shadows */
+  --sh-sm: 0 1px 3px rgba(25, 31, 40, 0.06);
+  --sh: 0 6px 24px rgba(25, 31, 40, 0.08);
+  --sh-lg: 0 12px 40px rgba(25, 31, 40, 0.1), 0 2px 8px rgba(25, 31, 40, 0.04);
+  --sh-xl: 0 30px 80px rgba(25, 31, 40, 0.16), 0 8px 24px rgba(25, 31, 40, 0.06);
+
+  /* fonts */
+  --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, sans-serif;
+  --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+}
+
+/* ── Tailwind v4 theme 매핑 ──────────────────────────────────────────── */
+@theme inline {
+  --color-red: var(--red);
+  --color-red-strong: var(--red-strong);
+  --color-red-deep: var(--red-deep);
+  --color-red-bg: var(--red-bg);
+  --color-red-line: var(--red-line);
+  --color-red-300: var(--red-300);
+
+  --color-g900: var(--g900);
+  --color-g800: var(--g800);
+  --color-g700: var(--g700);
+  --color-g600: var(--g600);
+  --color-g500: var(--g500);
+  --color-g400: var(--g400);
+  --color-g300: var(--g300);
+  --color-g200: var(--g200);
+  --color-g100: var(--g100);
+  --color-g50: var(--g50);
+  --color-bg: var(--bg);
+
+  --radius-lg: var(--r-lg);
+  --radius-md: var(--r-md);
+  --radius-sm: var(--r-sm);
+
+  --shadow-sm: var(--sh-sm);
+  --shadow-DEFAULT: var(--sh);
+  --shadow-lg: var(--sh-lg);
+  --shadow-xl: var(--sh-xl);
+
+  --font-sans: var(--font);
+  --font-mono: var(--mono);
+}
+
+/* ── base ────────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font);
+  color: var(--g900);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.02em;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

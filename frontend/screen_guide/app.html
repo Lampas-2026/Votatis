@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Votatis · 앱 서비스 화면 설계</title>
+<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png" />
+<link rel="icon" href="favicon/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+  :root{
+    --red:#dc2626;--red-strong:#b91c1c;--red-bg:#fdeaea;--red-line:#f5cccc;--red-300:#ec9c9c;
+    --g900:#191f28;--g800:#333d4b;--g700:#4e5968;--g600:#6b7684;--g500:#8b95a1;--g400:#b0b8c1;--g300:#d1d6db;--g200:#e5e8eb;--g100:#f2f4f6;--g50:#f9fafb;--bg:#fff;
+    --canvas:#eceef1;--cap:#8b95a1;
+    --font:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font);color:var(--g900);background:var(--canvas);line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-0.02em;background-image:radial-gradient(var(--g300) 1px,transparent 1px);background-size:24px 24px}
+  .board{max-width:980px;margin:0 auto;padding:36px clamp(14px,3vw,28px) 120px}
+  .doc-head{background:var(--g900);border-radius:22px;padding:clamp(22px,4vw,30px);color:#fff;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end;gap:22px;flex-wrap:wrap}
+  .doc-head .ttl{display:flex;align-items:center;gap:13px}
+  .doc-head .mark{width:40px;height:40px;border-radius:12px;background:var(--red);display:grid;place-items:center;font-size:21px;font-weight:800}
+  .doc-head h1{font-size:clamp(20px,4vw,25px);font-weight:800;letter-spacing:-0.04em}
+  .doc-head .ttl p{font-size:13px;color:var(--g400);margin-top:3px;font-weight:500}
+  .doc-meta{display:flex;gap:22px;flex-wrap:wrap}
+  .doc-meta div{font-size:12px;color:var(--g400)}.doc-meta b{display:block;font-size:13.5px;color:#fff;font-weight:700;margin-top:3px}
+  .group{margin:46px 0 22px;display:flex;align-items:center;gap:12px}
+  .group .gx{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--red);background:var(--red-bg);padding:5px 11px;border-radius:7px}
+  .group h2{font-size:17px;font-weight:800;letter-spacing:-0.03em}
+  .group .ln{flex:1;height:1px;background:var(--g300)}
+
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
+  .chip .pt{width:6px;height:6px;border-radius:50%}.chip.sm{font-size:11.5px;padding:4px 10px}
+  .c-cnf{background:var(--red);color:#fff}.c-cnf .pt{background:#fff}
+  .c-rev{background:var(--red-bg);color:var(--red-strong)}.c-rev .pt{background:var(--red)}
+  .c-unv{background:var(--g100);color:var(--g600)}.c-unv .pt{background:var(--g400)}
+  .c-dis{background:#fff;color:var(--g700);box-shadow:inset 0 0 0 1px var(--g300)}.c-dis .pt{background:var(--red)}
+  .c-deb{background:var(--g900);color:#fff}.c-deb .pt{background:#fff}
+  .catb{display:inline-block;width:20px;height:20px;border-radius:5px;font-size:11px;font-weight:800;color:#fff;text-align:center;line-height:20px}
+  .cat-a{background:var(--red)}.cat-b{background:var(--g900)}.cat-c{background:var(--g500)}
+
+  /* gallery + device (iPhone 390 x 844) */
+  .appgrid{display:flex;flex-wrap:wrap;gap:34px 30px;justify-content:center}
+  .pu{width:416px;max-width:100%}
+  .pcap{display:flex;align-items:center;gap:9px;margin-bottom:12px;padding-left:4px;flex-wrap:wrap}
+  .pcap .step{font-family:var(--mono);font-size:10.5px;font-weight:700;color:#fff;background:var(--red);padding:2px 8px;border-radius:6px}
+  .pcap .nm{font-size:13.5px;font-weight:800;color:var(--g800)}
+  .pcap .sz{font-family:var(--mono);font-size:10.5px;color:var(--cap)}
+  .pcap .tag{font-size:10px;font-weight:700;color:var(--g600);background:#fff;border:1px solid var(--g300);padding:2px 7px;border-radius:6px}
+  .device{width:416px;max-width:100%;background:#0b0e13;border-radius:50px;padding:13px;box-shadow:0 20px 44px rgba(25,31,40,.22)}
+  .screen{position:relative;width:100%;aspect-ratio:390/844;background:#fff;border-radius:37px;overflow:hidden;display:flex;flex-direction:column}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:128px;height:27px;background:#0b0e13;border-radius:0 0 17px 17px;z-index:9}
+  .sbar{height:47px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-size:15px;font-weight:700;color:var(--g900)}
+  .sbar .ic{display:flex;gap:6px;align-items:center}
+  .body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+
+  .phd{padding:6px 22px 16px;border-bottom:1px solid var(--g100)}
+  .phd .pg{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--g600);margin-bottom:8px}
+  .phd .pg b{color:var(--red)}
+  .ppb{height:6px;background:var(--g100);border-radius:99px;overflow:hidden;margin-bottom:14px}.ppb i{display:block;height:100%;background:var(--red);border-radius:99px}
+  .phd .t{font-size:21px;font-weight:800;letter-spacing:-0.03em}
+  .phd .s{font-size:13px;color:var(--g500);margin-top:3px}
+  .phd.bar{display:flex;align-items:center;gap:11px;padding-top:12px}
+  .pcontent{flex:1;min-height:0;overflow:hidden;padding:18px 22px}
+  .pl{font-size:13px;font-weight:700;color:var(--g700);margin-bottom:8px}
+  .pi{min-height:50px;border:1px solid var(--g200);border-radius:13px;display:flex;align-items:center;gap:9px;padding:0 15px;font-size:15px;color:var(--g400);margin-bottom:16px}
+  .pi.fill{color:var(--g900);font-weight:600;border-color:var(--g300)}
+  .pi svg{color:var(--red);flex-shrink:0}
+  .pi.foc{border-color:var(--red);box-shadow:0 0 0 4px var(--red-bg);color:var(--g900);font-weight:600}
+  .pty{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .pty b{font-size:14px;font-weight:700;padding:11px 15px;border-radius:12px;background:var(--g100);color:var(--g600)}
+  .pty b.on{background:var(--red-bg);color:var(--red-strong);box-shadow:inset 0 0 0 1px var(--red-line)}
+  .parea{border:1px solid var(--g200);border-radius:13px;padding:13px 15px;margin-bottom:16px}
+  .parea p{font-size:14.5px;color:var(--g700);line-height:1.55}
+  .parea .cc{text-align:right;font-size:11px;color:var(--g400);font-weight:600;margin-top:8px}
+  .psr{display:flex;gap:8px;margin-bottom:10px}
+  .psr .si{flex:1;height:48px;border:1px solid var(--g200);border-radius:12px;display:flex;align-items:center;padding:0 14px;font-size:13.5px;color:var(--g400)}
+  .psr .sx{width:48px;height:48px;border:1px solid var(--g200);border-radius:12px;display:grid;place-items:center;color:var(--g400)}
+  .padd{font-size:13.5px;font-weight:700;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:6px}
+  .pup{border:1.5px dashed var(--g300);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+  .pup .ic{width:48px;height:48px;border-radius:14px;background:var(--red-bg);color:var(--red);display:grid;place-items:center;margin:0 auto 11px}
+  .pup p{font-size:13.5px;color:var(--g600);font-weight:600}
+  .pup .sub{font-size:11.5px;color:var(--g400);font-weight:500;margin-top:4px}
+  .pth{display:flex;gap:9px;margin-bottom:9px}
+  .pth .t2{flex:1;height:78px;border-radius:13px;background:var(--g100);position:relative;display:grid;place-items:center;color:var(--g400)}
+  .pth .t2 .ex{position:absolute;bottom:6px;left:6px;font-size:9px;font-weight:800;color:#fff;background:var(--g900);opacity:.82;padding:1px 6px;border-radius:5px}
+  .popt{font-size:12px;color:var(--g500);font-weight:600;margin-bottom:15px}
+  .pck{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--g200);background:var(--g50);border-radius:13px;padding:14px;margin-bottom:16px}
+  .pck .b{width:24px;height:24px;border-radius:8px;background:var(--red);color:#fff;display:grid;place-items:center;flex-shrink:0}
+  .pck p{font-size:13px;color:var(--g700);line-height:1.5}
+  .pbtn{height:54px;background:var(--red);color:#fff;border-radius:14px;display:grid;place-items:center;font-size:16px;font-weight:700;letter-spacing:-0.02em}
+  .pbtn.ghost{background:#fff;color:var(--g700);box-shadow:inset 0 0 0 1px var(--g200)}
+  .pbtn.dis{background:var(--g300)}
+  .pfoot{padding:14px 22px 22px;flex-shrink:0}
+
+  /* onboarding / permission */
+  .onb{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:60px 30px 0}
+  .onb .logo{width:64px;height:64px;border-radius:20px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:32px;font-weight:800;margin-bottom:24px}
+  .onb h2{font-size:25px;font-weight:800;letter-spacing:-0.04em;line-height:1.3;margin-bottom:12px}
+  .onb p{font-size:14.5px;color:var(--g600);line-height:1.6;max-width:280px}
+  .perm{width:100%;margin-top:28px;display:flex;flex-direction:column;gap:11px}
+  .prow2{display:flex;align-items:center;gap:13px;border:1px solid var(--g200);border-radius:14px;padding:15px}
+  .prow2 .pic{width:42px;height:42px;border-radius:12px;background:var(--red-bg);color:var(--red);display:grid;place-items:center;flex-shrink:0}
+  .prow2 .tx{flex:1;text-align:left}
+  .prow2 .tx b{font-size:14.5px;font-weight:800;display:block}
+  .prow2 .tx span{font-size:12px;color:var(--g500)}
+  .prow2 .sw{width:46px;height:28px;border-radius:99px;background:var(--red);position:relative;flex-shrink:0}
+  .prow2 .sw::after{content:"";position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:#fff}
+  .prow2 .sw.off{background:var(--g300)}.prow2 .sw.off::after{right:auto;left:3px}
+
+  /* success */
+  .psuc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 28px}
+  .psuc .sc{width:78px;height:78px;border-radius:50%;background:var(--red-bg);color:var(--red);display:grid;place-items:center;margin-bottom:22px}
+  .psuc h4{font-size:23px;font-weight:800;letter-spacing:-0.03em;margin-bottom:11px}
+  .psuc p{font-size:14px;color:var(--g600);line-height:1.6;margin-bottom:16px;max-width:280px}
+  .psuc .ref{font-family:var(--mono);font-size:13px;color:var(--red-strong);background:var(--red-bg);padding:7px 16px;border-radius:99px;font-weight:700}
+  .psuc .pp{margin-top:22px;text-align:left;font-size:12.5px;color:var(--g500);background:var(--g50);border:1px solid var(--g200);border-radius:13px;padding:15px 16px;line-height:1.9;width:100%}
+
+  /* list */
+  .mfil{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .mfil b{font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:99px;background:var(--g100);color:var(--g600)}
+  .mfil b.on{background:var(--g900);color:#fff}
+  .mrec{padding:14px 0;border-bottom:1px solid var(--g100)}
+  .mrec .mt{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .mrec .mn{font-size:15px;font-weight:700;line-height:1.35;flex:1;min-width:0}
+  .mrec .mm{font-size:12px;color:var(--g500);font-weight:500;display:flex;align-items:center;gap:6px}
+  .ptab{flex-shrink:0;border-top:1px solid var(--g100);display:flex;align-items:center;justify-content:space-around;padding:11px 18px 16px}
+  .ptab .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;color:var(--g400)}
+  .ptab .tb.on{color:var(--red)}
+  .md-meta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+  .md-meta span{font-size:12px;color:var(--g600);background:var(--g100);padding:6px 11px;border-radius:8px;font-weight:600}
+  .rsec{font-size:11px;font-weight:800;color:var(--g400);letter-spacing:.04em;margin-bottom:9px}
+  .rsrc{font-size:14px;color:var(--g700);font-weight:600;margin-bottom:7px}
+
+  .note{background:#fff;border:1px solid var(--g200);border-radius:11px;padding:12px 15px;margin-top:12px}
+  .note h5{font-size:11px;font-weight:800;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .note h5::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--red)}
+  .note p{font-size:12.5px;color:var(--g700);line-height:1.55}
+</style>
+</head>
+<body>
+<div class="board">
+
+  <div class="doc-head">
+    <div class="ttl"><div class="mark">V</div><div><h1>Votatis · 앱 서비스 화면</h1><p>iPhone 390 × 844 · 제보 플로우 · A 선거 / B 집회·시위 / C 공익</p></div></div>
+    <div class="doc-meta"><div>버전<b>v1.0</b></div><div>기기<b>iPhone 390×844</b></div><div>화면<b>9</b></div></div>
+  </div>
+
+  <!-- ENTRY -->
+  <div class="group"><span class="gx">01</span><h2>진입 · 제보 플로우</h2><div class="ln"></div></div>
+  <div class="appgrid">
+
+    <!-- onboarding -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-00</span><span class="nm">온보딩 · 권한 요청</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="onb">
+            <div class="logo">V</div>
+            <h2>현장의 증거를<br>출처와 함께</h2>
+            <p>제보에는 위치와 카메라 권한이 필요합니다. 촬영 사진은 메타데이터를 보존해 검증에 사용됩니다.</p>
+            <div class="perm">
+              <div class="prow2"><div class="pic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><div class="tx"><b>카메라</b><span>현장 사진·영상 촬영</span></div><div class="sw"></div></div>
+              <div class="prow2"><div class="pic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="tx"><b>위치</b><span>제보 지점 자동 입력</span></div><div class="sw off"></div></div>
+            </div>
+          </div>
+          <div class="pfoot"><div class="pbtn">시작하기</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>권한</h5><p>카메라·위치는 제보 시점에만 사용. 실명·연락처는 수집하지 않음</p></div>
+    </div>
+
+    <!-- step 1 -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-01</span><span class="nm">제보 1 · 카테고리·위치·유형</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="phd"><div class="pg"><span>작성 완성도</span><b>40%</b></div><div class="ppb"><i style="width:40%"></i></div><div class="t">제보하기</div><div class="s">검토 큐로 전송됩니다</div></div>
+          <div class="pcontent">
+            <div class="pl">카테고리</div><div class="pty"><b class="on">선거</b><b>집회·시위</b><b>공익</b></div>
+            <div class="pl">위치</div><div class="pi fill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>경기 · 성남시 분당구</div>
+            <div class="pl">유형</div><div class="pty"><b>수치 에러</b><b class="on">봉인</b><b>훼손</b><b>지연</b><b>기타</b></div>
+          </div>
+          <div class="pfoot"><div class="pbtn">다음</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>동작</h5><p>카테고리 선택 시 유형 세트 전환. 위치는 GPS 자동·수동 보정</p></div>
+    </div>
+
+    <!-- step 2 -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-02</span><span class="nm">제보 2 · 상세·출처</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="phd"><div class="pg"><span>작성 완성도</span><b>65%</b></div><div class="ppb"><i style="width:65%"></i></div><div class="t">제보하기</div><div class="s">보이는 사실을 중립적으로</div></div>
+          <div class="pcontent">
+            <div class="pl">제목</div><div class="pi fill">사전투표함 봉인 스티커 훼손</div>
+            <div class="pl">상세 설명</div><div class="parea"><p>오후 4시경 봉인 스티커 일부가 떨어진 상태로 보였습니다. 사진을 함께 첨부합니다.</p><div class="cc">112 / 2000</div></div>
+            <div class="pl">출처</div><div class="psr"><div class="si">https://news.example.com/…</div><div class="sx"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+            <div class="padd"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>출처 추가</div>
+          </div>
+          <div class="pfoot"><div class="pbtn">다음</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>원칙</h5><p>중립 서술 안내. 출처 링크 또는 직접 촬영 첨부 중 최소 1개 필수</p></div>
+    </div>
+
+  </div>
+
+  <div class="appgrid" style="margin-top:30px">
+
+    <!-- step 3 -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-03</span><span class="nm">제보 3 · 첨부·동의</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="phd"><div class="pg"><span>작성 완성도</span><b>90%</b></div><div class="ppb"><i style="width:90%"></i></div><div class="t">제보하기</div><div class="s">메타데이터 보존 업로드</div></div>
+          <div class="pcontent">
+            <div class="pl">첨부 자료</div>
+            <div class="pup"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><p>카메라로 촬영 · 사진 선택</p><div class="sub">JPG·PNG·MP4 · 최대 50MB · 5개</div></div>
+            <div class="pth"><div class="t2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span class="ex">EXIF</span></div><div class="t2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span class="ex">EXIF</span></div></div>
+            <div class="popt">메타데이터 확인됨 · 최적화 시 약 -74%</div>
+            <div class="pck"><div class="b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></div><p><b style="color:var(--g900)">익명 제보·공개 동의</b> 실명·연락처는 저장하지 않습니다.</p></div>
+          </div>
+          <div class="pfoot"><div class="pbtn">제보 보내기</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>검증</h5><p>확장자·MIME·용량 검사, JPEG EXIF 점검, 1920px·WebP 최적화 추정 표시</p></div>
+    </div>
+
+    <!-- success -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-04</span><span class="nm">제보 완료</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="psuc">
+            <div class="sc"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h4>제보가 접수되었습니다</h4>
+            <p>검토 큐에 등록되었습니다. 사람이 출처를 대조한 뒤 공개 여부가 결정됩니다.</p>
+            <span class="ref">접수번호 local9-2026-4827</span>
+            <div class="pp"><b style="color:var(--g700)">이후 처리</b><br>1. R2 업로드 · SHA-256 봉인<br>2. 검토 큐 등록<br>3. 검증 후 공개 반영</div>
+          </div>
+          <div class="pfoot"><div class="pbtn ghost">아카이브 둘러보기</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>안내</h5><p>접수번호 부여. 제보는 주장으로 접수되어 검증 절차를 거친다는 점 재고지</p></div>
+    </div>
+
+    <!-- category B -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-0B</span><span class="nm">집회·시위 제보 (B)</span><span class="sz">390×844</span><span class="tag">카테고리 변형</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="phd"><div class="pg"><span>작성 완성도</span><b>45%</b></div><div class="ppb"><i style="width:45%"></i></div><div class="t">제보하기</div><div class="s">집회·시위 현장 기록</div></div>
+          <div class="pcontent">
+            <div class="pl">카테고리</div><div class="pty"><b>선거</b><b class="on">집회·시위</b><b>공익</b></div>
+            <div class="pl">위치</div><div class="pi fill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>서울 중구 · 시청 앞</div>
+            <div class="pl">유형</div><div class="pty"><b class="on">과잉 진압</b><b>연행 기록</b><b>부상자</b><b>구호 물품</b><b>집회 통제</b><b>규모·밀집도</b><b>이상 신고</b></div>
+          </div>
+          <div class="pfoot"><div class="pbtn">다음</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>카테고리 B</h5><p>유형이 집회·시위 세트로 전환. 부상자·연행 제보는 민감 정보로 분류, 공개 시 자동 마스킹</p></div>
+    </div>
+
+  </div>
+
+  <!-- BROWSE -->
+  <div class="group"><span class="gx">02</span><h2>열람 · 검색</h2><div class="ln"></div></div>
+  <div class="appgrid">
+
+    <!-- archive list -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-05</span><span class="nm">아카이브 목록</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="phd bar"><div><div class="t">공개 아카이브</div><div class="s">제9회 지방선거 · 318건</div></div></div>
+          <div class="pcontent">
+            <div class="mfil"><b class="on">전체</b><b>사실확인</b><b>반박됨</b><b>검토중</b></div>
+            <div class="mrec"><div class="mt"><span class="catb cat-a">A</span><div class="mn">투표지 수량 보고 정정 확인</div><span class="chip sm c-cnf"><span class="pt"></span>사실확인</span></div><div class="mm">성남 분당 · 출처 3 · 2h</div></div>
+            <div class="mrec"><div class="mt"><span class="catb cat-b">B</span><div class="mn">집회 현장 과잉 진압 제보</div><span class="chip sm c-rev"><span class="pt"></span>검토중</span></div><div class="mm">서울 중구 · 출처 2 · 3h</div></div>
+            <div class="mrec"><div class="mt"><span class="catb cat-a">A</span><div class="mn">사전투표 용지 부족 주장</div><span class="chip sm c-deb"><span class="pt"></span>반박됨</span></div><div class="mm">인천 연수 · 출처 2 · 1d</div></div>
+            <div class="mrec"><div class="mt"><span class="catb cat-c">C</span><div class="mn">공공시설 안전 미흡 제보</div><span class="chip sm c-dis"><span class="pt"></span>이견있음</span></div><div class="mm">대전 서구 · 출처 1 · 2d</div></div>
+          </div>
+          <div class="ptab"><div class="tb on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>아카이브</div><div class="tb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>검색</div><div class="tb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>제보</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>동작</h5><p>상태 필터 칩 · 카테고리 배지 · 무한 스크롤 · 하단 탭바. 행 탭 시 상세</p></div>
+    </div>
+
+    <!-- detail -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-06</span><span class="nm">레코드 상세</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="phd bar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--g700)" stroke-width="2.4" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg><div class="t" style="font-size:18px">레코드 상세</div></div>
+          <div class="pcontent">
+            <span class="chip c-cnf"><span class="pt"></span>사실확인 · confirmed</span>
+            <div class="md-meta"><span class="catb cat-a" style="width:auto;padding:0 8px;line-height:25px;height:25px">A 선거</span><span>성남 분당구</span><span>2026.06.03</span></div>
+            <h4 style="font-size:19px;font-weight:800;letter-spacing:-0.02em;line-height:1.35;margin-bottom:9px">투표지 수량 보고 정정 사실 확인</h4>
+            <p style="font-size:14px;color:var(--g600);line-height:1.6;margin-bottom:16px">1차 집계 보고 수치가 정정 공지로 수정된 사실 확인. 수치 적정성은 별도 판단.</p>
+            <div class="rsec">출처 · 교차확인</div>
+            <div class="rsrc">· 중앙선관위 정정 공지</div>
+            <div class="rsrc">· 현장 영상 원본 대조</div>
+            <div style="font-family:var(--mono);font-size:11.5px;color:var(--g500);background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:10px 12px;margin-top:10px">sha256 · 9f86d0…2c4e7d</div>
+          </div>
+        </div>
+      </div></div>
+      <div class="note"><h5>요소</h5><p>상태 칩 · 카테고리·메타 · 출처 · 무결성 해시. 웹과 동일 스키마, 단일 컬럼</p></div>
+    </div>
+
+    <!-- search -->
+    <div class="pu">
+      <div class="pcap"><span class="step">A-07</span><span class="nm">검색 · 필터</span><span class="sz">390×844</span></div>
+      <div class="device"><div class="screen"><div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="body">
+          <div class="phd bar"><div class="pi foc" style="flex:1;margin:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>봉인 스티커</div></div>
+          <div class="pcontent">
+            <div class="pl">카테고리</div><div class="pty"><b class="on">전체</b><b>A 선거</b><b>B 집회·시위</b><b>C 공익</b></div>
+            <div class="pl">검증 상태</div><div class="pty"><b class="on">전체</b><b>사실확인</b><b>검토중</b><b>반박됨</b></div>
+            <div class="pl">지역</div><div class="pi fill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>전체 지역</div>
+            <div class="pl">결과 · 12건</div>
+            <div class="mrec" style="padding-top:6px"><div class="mt"><span class="catb cat-a">A</span><div class="mn">사전투표함 봉인 스티커 훼손</div></div><div class="mm"><span class="chip sm c-rev"><span class="pt"></span>검토중</span> 성남 분당</div></div>
+          </div>
+          <div class="pfoot"><div class="pbtn">결과 보기</div></div>
+        </div>
+      </div></div>
+      <div class="note"><h5>검색</h5><p>키워드 + 카테고리·상태·지역 필터 조합. v2에서 시맨틱 검색 연동</p></div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:48px;font-size:12.5px;color:var(--g500);line-height:1.8;border-top:1px solid var(--g300);padding-top:22px"><b style="color:var(--g700);font-weight:700">고지.</b> 모든 수치·레코드는 데모용 예시입니다. 제보는 주장으로 접수되어 검증 절차를 거치며, 검증 상태가 함께 공개됩니다. 집회·시위의 부상자·연행 등 민감 정보는 공개 시 자동 마스킹되고 원본은 관리자만 접근하며 모든 열람이 기록됩니다. 화면은 iPhone 390×844 기준이며 좁은 화면에서는 비율을 유지한 채 축소됩니다.</div>
+
+</div>
+</body>
+</html>

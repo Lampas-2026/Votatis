@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Votatis — 흩어진 증거를 사라지지 않게</title>
+<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png" />
+<link rel="icon" href="favicon/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png" />
+<meta name="description" content="선거 현장의 제보를 출처와 함께 모으고, 사람이 검증한 결과만 공개 아카이브로 남깁니다. 검증 상태가 함께 표시되는 시민 주도 오픈소스 플랫폼." />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+  :root{
+    --red:#dc2626; --red-strong:#b91c1c; --red-deep:#991b1b; --red-bg:#fdeaea; --red-line:#f5cccc; --red-300:#ec9c9c;
+    --g900:#191f28; --g800:#333d4b; --g700:#4e5968; --g600:#6b7684; --g500:#8b95a1;
+    --g400:#b0b8c1; --g300:#d1d6db; --g200:#e5e8eb; --g100:#f2f4f6; --g50:#f9fafb; --bg:#ffffff;
+    --r-lg:24px; --r-md:18px; --r-sm:12px;
+    --sh-sm:0 1px 3px rgba(25,31,40,.06);
+    --sh:0 6px 24px rgba(25,31,40,.08);
+    --sh-lg:0 12px 40px rgba(25,31,40,.10),0 2px 8px rgba(25,31,40,.04);
+    --sh-xl:0 30px 80px rgba(25,31,40,.16),0 8px 24px rgba(25,31,40,.06);
+    --font:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--g900);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-0.02em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .narrow{max-width:920px}
+
+  header.nav{position:sticky;top:0;z-index:80;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--g100)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;letter-spacing:-0.04em}
+  .brand .mark{width:28px;height:28px;border-radius:9px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:800}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{font-size:15px;font-weight:600;color:var(--g700)}
+  .nav-links a:hover{color:var(--g900)}
+  @media(max-width:860px){.nav-links{display:none}}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font);font-weight:700;font-size:15px;padding:11px 20px;border-radius:12px;border:none;cursor:pointer;letter-spacing:-0.02em;transition:transform .12s ease,background .15s ease,color .15s ease}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--red);color:#fff}
+  .btn-primary:hover{background:var(--red-strong)}
+  .btn-soft{background:var(--g100);color:var(--g800)}
+  .btn-soft:hover{background:var(--g200)}
+  .btn-lg{padding:16px 28px;font-size:17px;border-radius:14px}
+
+  .hero{padding:96px 0 0;text-align:center;overflow:hidden}
+  .tag{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--red-strong);background:var(--red-bg);padding:8px 16px;border-radius:999px;margin-bottom:28px}
+  .tag .dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
+  .hero h1{font-size:clamp(40px,7vw,76px);font-weight:800;line-height:1.18;letter-spacing:-0.045em;margin-bottom:24px}
+  .hero h1 .b{color:var(--red)}
+  .hero .lead{font-size:clamp(17px,2.4vw,21px);color:var(--g600);font-weight:500;max-width:34ch;margin:0 auto 16px;line-height:1.6}
+  .hero .micro{font-size:14.5px;color:var(--g500);max-width:46ch;margin:0 auto 36px;line-height:1.6}
+  .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
+  .hero-stage{position:relative;padding-bottom:80px}
+  .hero-stage::before{content:"";position:absolute;left:50%;top:40px;transform:translateX(-50%);width:130%;max-width:1400px;height:78%;background:var(--g50);border-radius:40px;z-index:-1}
+
+  .browser{background:#fff;border:1px solid var(--g200);border-radius:18px;box-shadow:var(--sh-xl);overflow:hidden;text-align:left}
+  .browser-bar{height:48px;background:var(--g50);border-bottom:1px solid var(--g100);display:flex;align-items:center;padding:0 16px;gap:8px}
+  .dots{display:flex;gap:7px}
+  .dots i{width:11px;height:11px;border-radius:50%;background:var(--g300);display:block}
+  .url{flex:1;margin-left:10px;height:28px;background:#fff;border:1px solid var(--g200);border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:12.5px;color:var(--g500);font-weight:600;gap:7px}
+  .url svg{color:var(--g400)}
+  .browser-body{background:#fff}
+
+  .dash{display:flex;min-height:498px}
+  .dash-side{width:218px;border-right:1px solid var(--g100);padding:18px 14px;flex-shrink:0;background:#fff}
+  @media(max-width:780px){.dash-side{display:none}}
+  .side-logo{display:flex;align-items:center;gap:7px;font-weight:800;font-size:15.5px;margin-bottom:20px;letter-spacing:-0.04em;padding:0 6px}
+  .side-mark{width:24px;height:24px;border-radius:7px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800}
+  .side-sec{font-size:10.5px;font-weight:800;color:var(--g400);letter-spacing:.05em;margin:16px 6px 7px}
+  .side-item{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;font-size:13px;font-weight:600;color:var(--g600);margin-bottom:1px}
+  .side-item svg{flex-shrink:0;width:16px;height:16px}
+  .side-item .cnt{margin-left:auto;font-size:11px;font-weight:700;color:var(--g400)}
+  .side-item.on{background:var(--red-bg);color:var(--red-strong)}
+  .side-item.on .cnt{color:var(--red)}
+  .side-stat{display:flex;align-items:center;gap:9px;padding:8px 11px;font-size:12.5px;font-weight:600;color:var(--g600)}
+  .side-stat .sw{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+  .side-stat .cnt{margin-left:auto;color:var(--g500);font-weight:700;font-variant-numeric:tabular-nums}
+
+  .dash-main{flex:1;padding:22px 24px;background:var(--g50);min-width:0}
+  .dm-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .dm-head h3{font-size:18px;font-weight:800;letter-spacing:-0.03em}
+  .dm-head .sub{font-size:12px;color:var(--g500);margin-top:3px;font-weight:500}
+  .dm-tools{display:flex;align-items:center;gap:8px}
+  .dm-search{height:32px;background:#fff;border:1px solid var(--g200);border-radius:9px;display:flex;align-items:center;gap:7px;padding:0 11px;font-size:12px;color:var(--g400);font-weight:600}
+  .seg{display:flex;background:#fff;border:1px solid var(--g200);border-radius:9px;padding:3px}
+  .seg b{font-size:12px;font-weight:700;color:var(--g500);padding:5px 11px;border-radius:7px}
+  .seg b.on{background:var(--g900);color:#fff}
+
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:14px}
+  .tile{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:15px 16px}
+  .tile .tl{font-size:11.5px;color:var(--g500);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:9px}
+  .tile .tl .pt{width:7px;height:7px;border-radius:50%}
+  .tile .tv{font-size:25px;font-weight:800;letter-spacing:-0.04em;font-variant-numeric:tabular-nums;line-height:1}
+  .tile .td{font-size:11px;font-weight:700;margin-top:7px;display:flex;align-items:center;gap:4px}
+  .up{color:var(--red)} .dn{color:var(--g500)}
+  .pt-red{background:var(--red)} .pt-rl{background:var(--red-300)} .pt-g{background:var(--g400)} .pt-dk{background:var(--g900)}
+
+  .prow{display:grid;grid-template-columns:1.5fr 1fr;gap:11px}
+  @media(max-width:780px){.prow{grid-template-columns:1fr}}
+  .panel{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:15px 17px}
+  .panel .ph{font-size:13px;font-weight:800;letter-spacing:-0.02em;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between}
+  .panel .ph .more{font-size:11px;color:var(--g500);font-weight:600}
+
+  .tbl{width:100%;border-collapse:collapse}
+  .tbl th{font-size:10.5px;font-weight:700;color:var(--g500);text-align:left;padding:0 8px 9px;letter-spacing:.02em}
+  .tbl td{font-size:12px;padding:9px 8px;border-top:1px solid var(--g100);color:var(--g700);vertical-align:middle}
+  .tbl .nm{font-weight:700;color:var(--g900);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tbl .mut{color:var(--g500);font-size:11.5px}
+  .av{width:22px;height:22px;border-radius:50%;background:var(--g200);color:var(--g700);font-size:10px;font-weight:800;display:grid;place-items:center}
+
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+  .chip .pt{width:6px;height:6px;border-radius:50%}
+  .c-cnf{background:var(--red);color:#fff}.c-cnf .pt{background:#fff}
+  .c-rev{background:var(--red-bg);color:var(--red-strong)}.c-rev .pt{background:var(--red)}
+  .c-unv{background:var(--g100);color:var(--g600)}.c-unv .pt{background:var(--g400)}
+  .c-dis{background:#fff;color:var(--g700);box-shadow:inset 0 0 0 1px var(--g300)}.c-dis .pt{background:var(--red)}
+  .c-deb{background:var(--g900);color:#fff}.c-deb .pt{background:#fff}
+  .c-cor{background:var(--g200);color:var(--g700)}.c-cor .pt{background:var(--g500)}
+
+  .donut-wrap{display:flex;flex-direction:column;gap:14px}
+  .donut{width:118px;height:118px;border-radius:50%;flex-shrink:0;position:relative;margin:2px auto 0;
+    background:conic-gradient(var(--red) 0 35%, var(--red-300) 35% 55%, var(--g300) 55% 71%, var(--g900) 71% 82%, var(--g500) 82% 91%, var(--g400) 91% 100%)}
+  .donut::after{content:"";position:absolute;inset:19px;background:#fff;border-radius:50%}
+  .donut .center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;z-index:1}
+  .donut .center b{font-size:22px;font-weight:800;letter-spacing:-0.04em;line-height:1}
+  .donut .center span{font-size:10px;color:var(--g500);font-weight:600}
+  .legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+  .leg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--g700);font-weight:600}
+  .leg .sw{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+  .leg .vv{margin-left:auto;color:var(--g500);font-variant-numeric:tabular-nums}
+  .rate{margin-top:4px;padding-top:13px;border-top:1px solid var(--g100)}
+  .rate .rl{display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;color:var(--g600);margin-bottom:6px}
+  .rate .rl b{color:var(--g900);font-weight:800}
+  .track{height:7px;background:var(--g100);border-radius:99px;overflow:hidden}
+  .track i{display:block;height:100%;background:var(--red);border-radius:99px}
+
+  .hbar{margin-bottom:11px}
+  .hbar .hl{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--g700);margin-bottom:5px}
+  .hbar .hl b{color:var(--g500);font-weight:700;font-variant-numeric:tabular-nums}
+
+  /* evidence thumbs in detail panel */
+  .ev-thumbs{display:flex;gap:8px;margin-bottom:13px}
+  .ev-thumbs .et{width:60px;height:60px;border-radius:9px;background:var(--g100);position:relative;overflow:hidden;display:grid;place-items:center;color:var(--g400)}
+  .ev-thumbs .et .tg{position:absolute;left:4px;bottom:4px;font-size:8px;font-weight:800;color:#fff;background:var(--g900);opacity:.82;padding:1px 5px;border-radius:4px}
+  .kv{font-size:11.5px;color:var(--g600);line-height:1.7;margin-bottom:3px}
+  .kv b{color:var(--g800);font-weight:700}
+  .act{display:flex;gap:7px;margin-top:auto}
+  .act .a1{flex:1;height:36px;background:var(--red);color:#fff;border-radius:9px;display:grid;place-items:center;font-size:12.5px;font-weight:700}
+  .act .a2{flex:1;height:36px;background:var(--g100);color:var(--g700);border-radius:9px;display:grid;place-items:center;font-size:12.5px;font-weight:700}
+  .act .a3{width:36px;height:36px;background:#fff;box-shadow:inset 0 0 0 1px var(--g200);color:var(--g500);border-radius:9px;display:grid;place-items:center}
+
+  section.sec{padding:120px 0}
+  .sec.gray{background:var(--g50)}
+  .eyebrow{font-size:15px;font-weight:800;color:var(--red);letter-spacing:-0.02em;margin-bottom:16px}
+  .sec h2{font-size:clamp(28px,4.6vw,46px);font-weight:800;line-height:1.32;letter-spacing:-0.04em;margin-bottom:18px}
+  .sec .desc{font-size:clamp(16px,2vw,19px);color:var(--g600);font-weight:500;line-height:1.7;max-width:52ch}
+  .center{text-align:center}.center .desc{margin-left:auto;margin-right:auto}
+
+  .showcase{display:grid;grid-template-columns:0.82fr 1.18fr;gap:56px;align-items:center}
+  .showcase.flip{grid-template-columns:1.18fr 0.82fr}
+  .showcase.flip .copy{order:2}
+  @media(max-width:980px){.showcase,.showcase.flip{grid-template-columns:1fr;gap:36px}.showcase.flip .copy{order:0}}
+  .copy h2{font-size:clamp(26px,3.6vw,40px)}
+  .feat{margin-top:28px;display:flex;flex-direction:column;gap:14px}
+  .feat .fi{display:flex;gap:12px;align-items:flex-start}
+  .feat .fi .ic{width:24px;height:24px;border-radius:7px;background:var(--red-bg);color:var(--red);display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+  .feat .fi p{font-size:15.5px;color:var(--g700);font-weight:500;line-height:1.55}
+  .feat .fi p b{color:var(--g900);font-weight:700}
+
+  .bignum{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px}
+  @media(max-width:760px){.bignum{grid-template-columns:1fr;gap:32px}}
+  .bn .v{font-size:clamp(40px,5vw,56px);font-weight:800;letter-spacing:-0.05em;line-height:1;margin-bottom:14px}
+  .bn .v.red{color:var(--red)}.bn .v.dk{color:var(--g900)}
+  .bn h4{font-size:18px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px}
+  .bn p{font-size:14.5px;color:var(--g600);line-height:1.6}
+
+  .pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  @media(max-width:880px){.pipe{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.pipe{grid-template-columns:1fr}}
+  .pstep{background:#fff;border:1px solid var(--g200);border-radius:18px;padding:24px 22px}
+  .pstep .pn{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--red);margin-bottom:14px}
+  .pstep .pic{width:42px;height:42px;border-radius:12px;background:var(--red-bg);color:var(--red);display:grid;place-items:center;margin-bottom:16px}
+  .pstep h4{font-size:16px;font-weight:800;letter-spacing:-0.03em;margin-bottom:7px}
+  .pstep p{font-size:13.5px;color:var(--g600);line-height:1.55}
+
+  .grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:880px){.grid6{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid6{grid-template-columns:1fr}}
+  .prin{background:#fff;border:1px solid var(--g200);border-radius:18px;padding:26px 24px}
+  .prin .ic{width:42px;height:42px;border-radius:12px;background:var(--g100);color:var(--g800);display:grid;place-items:center;margin-bottom:16px}
+  .prin h4{font-size:17px;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px}
+  .prin p{font-size:14px;color:var(--g600);line-height:1.6}
+
+  .phone{width:308px;margin:0 auto;background:var(--g900);border-radius:48px;padding:11px;box-shadow:var(--sh-xl)}
+  .phone .scr{background:#fff;border-radius:38px;overflow:hidden;position:relative}
+  .statusbar{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 28px;font-size:13px;font-weight:700;color:var(--g900)}
+  .statusbar .ic{display:flex;gap:5px;align-items:center;color:var(--g900)}
+  .ph-top{padding:6px 22px 14px;border-bottom:1px solid var(--g100)}
+  .ph-top .pgt{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--g600);margin-bottom:7px}
+  .ph-top .pgt b{color:var(--red)}
+  .ph-pbar{height:6px;background:var(--g100);border-radius:99px;overflow:hidden;margin-bottom:14px}
+  .ph-pbar i{display:block;height:100%;width:80%;background:var(--red);border-radius:99px}
+  .ph-top .t{font-size:18px;font-weight:800;letter-spacing:-0.03em}
+  .ph-body{padding:16px 22px 22px}
+  .flbl{font-size:11.5px;font-weight:700;color:var(--g700);margin-bottom:7px}
+  .finput{min-height:42px;border:1px solid var(--g200);border-radius:11px;display:flex;align-items:center;gap:8px;padding:0 13px;font-size:13px;color:var(--g400);margin-bottom:15px}
+  .finput.filled{color:var(--g900);font-weight:600;border-color:var(--g300)}
+  .finput svg{color:var(--red);flex-shrink:0}
+  .farea{border:1px solid var(--g200);border-radius:11px;padding:11px 13px;margin-bottom:15px}
+  .farea p{font-size:12.5px;color:var(--g700);line-height:1.5}
+  .farea .cc{text-align:right;font-size:10px;color:var(--g400);font-weight:600;margin-top:6px}
+  .ftypes{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
+  .ftypes b{font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;background:var(--g100);color:var(--g600)}
+  .ftypes b.on{background:var(--red-bg);color:var(--red-strong);box-shadow:inset 0 0 0 1px var(--red-line)}
+  .fthumbs{display:flex;gap:8px;margin-bottom:8px}
+  .fthumbs .th{flex:1;height:62px;border-radius:11px;background:var(--g100);position:relative;overflow:hidden;display:grid;place-items:center;color:var(--g400)}
+  .fthumbs .th .ex{position:absolute;bottom:4px;left:4px;font-size:8px;font-weight:800;color:#fff;background:var(--g900);opacity:.82;padding:1px 5px;border-radius:4px}
+  .fopt{font-size:10.5px;color:var(--g500);font-weight:600;margin-bottom:14px}
+  .fbtn-sub{height:48px;background:var(--red);color:#fff;border-radius:13px;display:grid;place-items:center;font-size:15px;font-weight:700;letter-spacing:-0.02em}
+
+  .chart-card{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:26px 28px}
+  .chart-card .ch-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+  .chart-card .ch-head .t{font-size:17px;font-weight:800;letter-spacing:-0.03em}
+  .chart-card .ch-head .s{font-size:13px;color:var(--g500);font-weight:600;margin-top:4px}
+  .ch-legend{display:flex;gap:16px}
+  .ch-legend span{font-size:12.5px;font-weight:700;color:var(--g600);display:flex;align-items:center;gap:6px}
+  .ch-legend i{width:10px;height:10px;border-radius:3px;display:block}
+  .viz-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  @media(max-width:820px){.viz-grid{grid-template-columns:1fr}}
+
+  .cta{background:var(--g900);border-radius:32px;padding:80px 40px;text-align:center}
+  .cta h2{font-size:clamp(28px,4.4vw,44px);font-weight:800;color:#fff;letter-spacing:-0.04em;line-height:1.3;margin-bottom:16px}
+  .cta p{font-size:17px;color:var(--g400);font-weight:500;margin-bottom:34px;line-height:1.6}
+  .cta .btn-primary{background:var(--red);color:#fff}
+  .cta .btn-primary:hover{background:var(--red-strong)}
+  .cta .btn-soft{background:rgba(255,255,255,.1);color:#fff}
+  .cta .btn-soft:hover{background:rgba(255,255,255,.18)}
+
+  footer{padding:60px 0 72px;border-top:1px solid var(--g100)}
+  .foot-grid{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;margin-bottom:36px}
+  .foot-brand p{font-size:14px;color:var(--g500);max-width:40ch;margin-top:12px;line-height:1.6}
+  .foot-cols{display:flex;gap:64px;flex-wrap:wrap}
+  .foot-col h5{font-size:13px;font-weight:800;color:var(--g800);margin-bottom:14px}
+  .foot-col a{display:block;font-size:14px;color:var(--g500);margin-bottom:10px;font-weight:500}
+  .foot-col a:hover{color:var(--g900)}
+  .foot-note{border-top:1px solid var(--g100);padding-top:26px;font-size:13px;color:var(--g400);line-height:1.75}
+  .foot-note strong{color:var(--g600);font-weight:700}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important}.reveal{opacity:1;transform:none}}
+  :focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:8px}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><span class="mark">V</span>Votatis</a>
+    <nav class="nav-links">
+      <a href="#archive">공개 아카이브</a>
+      <a href="#admin">검증 시스템</a>
+      <a href="#report">제보</a>
+      <a href="#principles">설계 원칙</a>
+    </nav>
+    <a class="btn btn-primary" href="report.html">제보하기</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="tag"><span class="dot"></span>시민 주도 · 오픈소스 시빅테크</span>
+      <h1>흩어진 증거를<br /><span class="b">사라지지 않게.</span></h1>
+      <p class="lead">선거 현장의 제보를 출처와 함께 모으고, 사람이 검증한 결과만 공개 아카이브로 남깁니다.</p>
+      <p class="micro">접수된 제보는 사실이 아니라 검증 대상인 주장으로 다뤄집니다. 모든 기록에는 검증 상태가 함께 표시되고, 반박된 내용도 그대로 남습니다.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="report.html">제보 보내기</a>
+        <a class="btn btn-soft btn-lg" href="#archive">아카이브 둘러보기</a>
+      </div>
+    </div>
+    <div class="wrap hero-stage">
+      <div class="browser reveal">
+        <div class="browser-bar"><div class="dots"><i></i><i></i><i></i></div><div class="url"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>votatis.kr/archive</div></div>
+        <div class="browser-body">
+          <div class="dash">
+            <aside class="dash-side">
+              <div class="side-logo"><span class="side-mark">V</span>Votatis</div>
+              <div class="side-sec">아카이브</div>
+              <div class="side-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>전체 기록<span class="cnt">318</span></div>
+              <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>검색</div>
+              <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>지도</div>
+              <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>통계</div>
+              <div class="side-sec">검증 상태</div>
+              <div class="side-stat"><span class="sw" style="background:var(--red)"></span>사실확인<span class="cnt">112</span></div>
+              <div class="side-stat"><span class="sw" style="background:var(--red-300)"></span>검토중<span class="cnt">64</span></div>
+              <div class="side-stat"><span class="sw" style="background:var(--g300)"></span>미검증<span class="cnt">51</span></div>
+              <div class="side-stat"><span class="sw" style="background:var(--g900)"></span>반박됨<span class="cnt">35</span></div>
+            </aside>
+            <div class="dash-main">
+              <div class="dm-head">
+                <div><h3>전체 기록</h3><div class="sub">제9회 전국동시지방선거 · 318건</div></div>
+                <div class="dm-tools"><div class="dm-search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>검색</div><div class="seg"><b class="on">전체</b><b>최신</b><b>지역</b></div></div>
+              </div>
+              <div class="tiles">
+                <div class="tile"><div class="tl"><span class="pt pt-g"></span>수집</div><div class="tv">318</div><div class="td dn">전체 제보</div></div>
+                <div class="tile"><div class="tl"><span class="pt pt-rl"></span>검토중</div><div class="tv">64</div><div class="td up">▲ 12 오늘</div></div>
+                <div class="tile"><div class="tl"><span class="pt pt-red"></span>사실확인</div><div class="tv">112</div><div class="td up">검증 완료</div></div>
+                <div class="tile"><div class="tl"><span class="pt pt-dk"></span>반박·정정</div><div class="tv">63</div><div class="td dn">기록 보존</div></div>
+              </div>
+              <div class="prow">
+                <div class="panel">
+                  <div class="ph">최근 기록 <span class="more">전체 보기</span></div>
+                  <table class="tbl">
+                    <thead><tr><th>제보</th><th>지역</th><th>검증</th><th>검토자</th><th>시각</th></tr></thead>
+                    <tbody>
+                      <tr><td class="nm">투표지 수량 보고 정정 확인</td><td class="mut">성남 분당</td><td><span class="chip c-cnf"><span class="pt"></span>사실확인</span></td><td><span class="av">A1</span></td><td class="mut">2h</td></tr>
+                      <tr><td class="nm">사전투표함 봉인 스티커 훼손</td><td class="mut">성남 분당</td><td><span class="chip c-rev"><span class="pt"></span>검토중</span></td><td><span class="av">B2</span></td><td class="mut">5h</td></tr>
+                      <tr><td class="nm">사전투표 용지 부족 주장</td><td class="mut">인천 연수</td><td><span class="chip c-deb"><span class="pt"></span>반박됨</span></td><td><span class="av">A1</span></td><td class="mut">1d</td></tr>
+                      <tr><td class="nm">참관인 퇴장 요구 주장</td><td class="mut">광주 북구</td><td><span class="chip c-dis"><span class="pt"></span>이견있음</span></td><td><span class="av">C3</span></td><td class="mut">1d</td></tr>
+                      <tr><td class="nm">분류기 일시 정지 보고</td><td class="mut">포항 남구</td><td><span class="chip c-cnf"><span class="pt"></span>사실확인</span></td><td><span class="av">B2</span></td><td class="mut">2d</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="panel">
+                  <div class="ph">검증 상태 분포</div>
+                  <div class="donut-wrap">
+                    <div class="donut"><div class="center"><b>318</b><span>전체 기록</span></div></div>
+                    <div class="legend">
+                      <div class="leg"><span class="sw" style="background:var(--red)"></span>사실확인<span class="vv">112</span></div>
+                      <div class="leg"><span class="sw" style="background:var(--red-300)"></span>검토중<span class="vv">64</span></div>
+                      <div class="leg"><span class="sw" style="background:var(--g300)"></span>미검증<span class="vv">51</span></div>
+                      <div class="leg"><span class="sw" style="background:var(--g900)"></span>반박됨<span class="vv">35</span></div>
+                      <div class="leg"><span class="sw" style="background:var(--g500)"></span>이견있음<span class="vv">28</span></div>
+                      <div class="leg"><span class="sw" style="background:var(--g400)"></span>정정됨<span class="vv">28</span></div>
+                    </div>
+                    <div class="rate"><div class="rl"><span>검증 처리율</span><b>65%</b></div><div class="track"><i style="width:65%"></i></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="sec center">
+    <div class="wrap narrow">
+      <div class="reveal">
+        <p class="eyebrow">왜 만드나</p>
+        <h2>신뢰를 무너뜨리는 건 의혹이 아니라,<br />정리되지 않은 정보입니다.</h2>
+        <p class="desc">제보가 메신저와 SNS에 흩어지면 원본은 사라지고, 주장과 사실이 같은 무게로 떠돕니다.</p>
+      </div>
+      <div class="bignum reveal" style="text-align:left;margin-top:56px">
+        <div class="bn"><div class="v">72시간</div><h4>증거의 수명</h4><p>현장 자료 다수가 며칠 안에 삭제되거나 원본을 찾을 수 없게 됩니다.</p></div>
+        <div class="bn"><div class="v red">출처 0</div><h4>검증 불가</h4><p>출처가 없는 정보는 사후에 확인할 수도, 반박할 수도 없습니다.</p></div>
+        <div class="bn"><div class="v dk">같은 무게</div><h4>뒤섞인 진실</h4><p>사실, 단순 주장, 이미 반박된 내용이 구분 없이 함께 퍼집니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE 1: ARCHIVE RECORD -->
+  <section class="sec gray" id="archive">
+    <div class="wrap showcase">
+      <div class="copy reveal">
+        <p class="eyebrow">공개 아카이브</p>
+        <h2>무엇이 사실이고<br />무엇이 아닌지,<br />한눈에.</h2>
+        <p class="desc">모든 기록은 검증 상태 라벨과 함께 공개됩니다. 출처, 무결성 해시, 반론, 검증 이력까지 레코드 한 건에 그대로 담깁니다.</p>
+        <div class="feat">
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p><b>여섯 단계 검증 상태</b>로 사실과 주장을 분리합니다.</p></div>
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>반론과 정정 이력을 <b>같은 페이지에</b> 함께 보존합니다.</p></div>
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>출처 링크와 <b>SHA-256 해시</b>로 누구나 무결성을 검증합니다.</p></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="browser">
+          <div class="browser-bar"><div class="dots"><i></i><i></i><i></i></div><div class="url"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>votatis.kr/archive/local9-2026-0042</div></div>
+          <div class="browser-body" style="padding:22px 24px;background:var(--g50)">
+            <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;padding:22px 24px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+                <span class="chip c-cnf" style="font-size:11.5px;padding:4px 11px"><span class="pt"></span>사실확인 · confirmed</span>
+                <span style="font-family:var(--mono);font-size:11.5px;color:var(--g400)">local9-2026-0042</span>
+              </div>
+              <h3 style="font-size:18px;font-weight:800;letter-spacing:-0.03em;line-height:1.4;margin-bottom:8px">OO 개표소 투표지 수량 보고 정정 사실 확인</h3>
+              <p style="font-size:13px;color:var(--g600);line-height:1.6;margin-bottom:16px">1차 집계 보고 수치가 이후 정정 공지로 수정된 사실이 확인됨. 수치 자체의 적정성은 별도 판단 대상.</p>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
+                <span style="font-size:11.5px;color:var(--g600);background:var(--g100);padding:5px 10px;border-radius:8px;font-weight:600">제9회 지방선거</span>
+                <span style="font-size:11.5px;color:var(--g600);background:var(--g100);padding:5px 10px;border-radius:8px;font-weight:600">경기 성남 분당구</span>
+                <span style="font-size:11.5px;color:var(--g600);background:var(--g100);padding:5px 10px;border-radius:8px;font-weight:600">2026.06.03</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid var(--g100);padding-top:15px">
+                <div>
+                  <div style="font-size:10.5px;font-weight:800;color:var(--g400);letter-spacing:.05em;margin-bottom:9px">출처 · 교차확인</div>
+                  <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--g700);font-weight:600;margin-bottom:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>중앙선관위 정정 공지</div>
+                  <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--g700);font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>현장 영상 원본 대조</div>
+                </div>
+                <div>
+                  <div style="font-size:10.5px;font-weight:800;color:var(--g400);letter-spacing:.05em;margin-bottom:9px">반론</div>
+                  <p style="font-size:12px;color:var(--g600);line-height:1.5">선관위는 정정 후 수치가 최종 집계와 일치한다고 발표.</p>
+                </div>
+              </div>
+              <div style="margin-top:15px;font-family:var(--mono);font-size:11px;color:var(--g500);background:var(--g50);border:1px solid var(--g200);border-radius:9px;padding:9px 11px;display:flex;align-items:center;gap:7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>sha256 · 9f86d0818a4b9bf1c2e4d7a3…2c4e7d</div>
+              <div style="margin-top:14px;border-top:1px solid var(--g100);padding-top:13px">
+                <div style="font-size:10.5px;font-weight:800;color:var(--g400);letter-spacing:.05em;margin-bottom:9px">검증 이력</div>
+                <div style="display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--g600);margin-bottom:6px"><span class="av" style="width:20px;height:20px;font-size:9px">A1</span>검토 시작 · 원본 영상 확보<span style="margin-left:auto;color:var(--g400)">06.03</span></div>
+                <div style="display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--g600)"><span class="av" style="width:20px;height:20px;font-size:9px;background:var(--red-bg);color:var(--red-strong)">A1</span>사실확인 승격 · 선관위 공지 교차확인<span style="margin-left:auto;color:var(--g400)">06.04</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE 2: ADMIN -->
+  <section class="sec" id="admin">
+    <div class="wrap showcase flip">
+      <div class="reveal">
+        <div class="browser">
+          <div class="browser-bar"><div class="dots"><i></i><i></i><i></i></div><div class="url"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>admin.votatis.kr/queue</div></div>
+          <div class="browser-body">
+            <div class="dash">
+              <aside class="dash-side">
+                <div class="side-logo"><span class="side-mark">V</span>관리자</div>
+                <div class="side-sec">검증</div>
+                <div class="side-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>검토 큐<span class="cnt">64</span></div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>통계</div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h7"/></svg>레코드</div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.6h-4l-.3 2.6a7 7 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.6h4l.3-2.6a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5a7 7 0 0 0 .1-1z"/></svg>설정</div>
+              </aside>
+              <div class="dash-main">
+                <div class="dm-head"><div><h3>검토 큐</h3><div class="sub">검증 대기 64건 · 담당 검토자 3명</div></div><div class="seg"><b class="on">대기</b><b>보완</b><b>완료</b></div></div>
+                <div class="tiles" style="grid-template-columns:repeat(4,1fr)">
+                  <div class="tile"><div class="tl"><span class="pt pt-rl"></span>대기</div><div class="tv">64</div><div class="td dn">검증 전</div></div>
+                  <div class="tile"><div class="tl"><span class="pt pt-red"></span>오늘 승인</div><div class="tv">12</div><div class="td up">▲ 처리</div></div>
+                  <div class="tile"><div class="tl"><span class="pt pt-g"></span>평균 검토</div><div class="tv">3.2<span style="font-size:13px">h</span></div><div class="td dn">소요</div></div>
+                  <div class="tile"><div class="tl"><span class="pt pt-dk"></span>반박률</div><div class="tv">11<span style="font-size:13px">%</span></div><div class="td dn">누적</div></div>
+                </div>
+                <div class="prow" style="grid-template-columns:1.15fr .85fr">
+                  <div class="panel">
+                    <div class="ph">대기 항목 <span class="more">우선순위순</span></div>
+                    <table class="tbl">
+                      <thead><tr><th>제보</th><th>유형</th><th>출처</th><th>상태</th></tr></thead>
+                      <tbody>
+                        <tr style="background:var(--red-bg)"><td class="nm">사전투표함 봉인 스티커 훼손</td><td class="mut">봉인</td><td class="mut">2</td><td><span class="chip c-rev"><span class="pt"></span>검토중</span></td></tr>
+                        <tr><td class="nm">투표지 인쇄 상태 이상 이미지</td><td class="mut">훼손</td><td class="mut">1</td><td><span class="chip c-unv"><span class="pt"></span>미검증</span></td></tr>
+                        <tr><td class="nm">분류기 일시 정지 보고</td><td class="mut">지연</td><td class="mut">2</td><td><span class="chip c-rev"><span class="pt"></span>검토중</span></td></tr>
+                        <tr><td class="nm">CCTV 사각지대 주장 영상</td><td class="mut">기타</td><td class="mut">1</td><td><span class="chip c-unv"><span class="pt"></span>미검증</span></td></tr>
+                        <tr><td class="nm">참관인 퇴장 요구 주장</td><td class="mut">기타</td><td class="mut">3</td><td><span class="chip c-unv"><span class="pt"></span>미검증</span></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="panel" style="display:flex;flex-direction:column">
+                    <div class="ph">검증 패널</div>
+                    <div style="font-size:13px;font-weight:800;margin-bottom:5px;letter-spacing:-0.02em">사전투표함 봉인 스티커 훼손</div>
+                    <p style="font-size:11.5px;color:var(--g600);line-height:1.5;margin-bottom:12px">봉인 스티커 일부가 떨어진 상태로 보였다는 제보. 원본 사진 대조 진행중.</p>
+                    <div class="ev-thumbs">
+                      <div class="et"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span class="tg">EXIF</span></div>
+                      <div class="et"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span class="tg">EXIF</span></div>
+                    </div>
+                    <div class="kv"><b>검증 방법</b> 원본 대조, 봉인 절차 공지 확인</div>
+                    <div class="kv" style="margin-bottom:13px"><b>근거</b> 선관위 봉인 절차 공지 · 제보 첨부 2건</div>
+                    <div class="act"><div class="a1">승인</div><div class="a2">보완</div><div class="a3"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="copy reveal">
+        <p class="eyebrow">검증 시스템</p>
+        <h2>수집은 자동으로,<br />판단은 사람이.</h2>
+        <p class="desc">수집 단계는 아무것도 판단하지 않습니다. 검토 큐에서 사람이 원본과 선관위 공지를 대조해 상태를 부여하고, 통과한 데이터만 공개됩니다.</p>
+        <div class="feat">
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>승인 · 보완 · 거절을 <b>근거 링크와 함께</b> 기록합니다.</p></div>
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>처리 시간 · 반박률 등 <b>운영 지표</b>를 함께 추적합니다.</p></div>
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>모든 검증 이력은 <b>공개 저장소</b>에 그대로 남습니다.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE 3: MOBILE -->
+  <section class="sec gray" id="report">
+    <div class="wrap showcase">
+      <div class="copy reveal">
+        <p class="eyebrow">모바일 제보</p>
+        <h2>현장에서<br />바로 남기세요.</h2>
+        <p class="desc">위치와 유형을 고르고 사진을 올리면 끝입니다. 촬영 위치·시각 정보는 보존된 채 안전하게 업로드되고, 출처가 함께 기록됩니다.</p>
+        <div class="feat">
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>카메라로 <b>바로 촬영</b>해 제보할 수 있습니다.</p></div>
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>메타데이터를 확인하고 <b>1회용 보안 링크</b>로 직접 업로드합니다.</p></div>
+          <div class="fi"><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><p>실명·연락처는 <b>저장하지 않습니다.</b></p></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="phone">
+          <div class="scr">
+            <div class="statusbar"><span>9:41</span><span class="ic"><svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg><svg width="22" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="3" stroke="currentColor" stroke-width="1.2"/><rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor"/><rect x="21" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></span></div>
+            <div class="ph-top">
+              <div class="pgt"><span>작성 완성도</span><b>80%</b></div>
+              <div class="ph-pbar"><i></i></div>
+              <div class="t">제보하기</div>
+            </div>
+            <div class="ph-body">
+              <div class="flbl">위치</div>
+              <div class="finput filled"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>경기도 · 성남시 분당구</div>
+              <div class="flbl">유형</div>
+              <div class="ftypes"><b>수치 에러</b><b class="on">봉인</b><b>훼손</b><b>지연</b><b>기타</b></div>
+              <div class="flbl">상세 설명</div>
+              <div class="farea"><p>오후 4시경 사전투표함 봉인 스티커 일부가 떨어진 상태로 보였습니다. 사진을 함께 첨부합니다.</p><div class="cc">112 / 2000</div></div>
+              <div class="flbl">첨부 자료</div>
+              <div class="fthumbs"><div class="th"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span class="ex">EXIF</span></div><div class="th"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span class="ex">EXIF</span></div></div>
+              <div class="fopt">메타데이터 확인됨 · 최적화 시 약 -74%</div>
+              <div class="fbtn-sub">제보 보내기</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATA VIZ -->
+  <section class="sec center" id="viz">
+    <div class="wrap">
+      <div class="reveal" style="max-width:52ch;margin:0 auto">
+        <p class="eyebrow">데이터로 보는 아카이브</p>
+        <h2>제보가 쌓일수록<br />패턴이 보입니다.</h2>
+        <p class="desc">유형·지역·시점별 분포를 집계해 공개합니다. 모든 수치는 검증 상태별로 구분됩니다.</p>
+      </div>
+      <div class="chart-card reveal" style="margin-top:56px;text-align:left">
+        <div class="ch-head">
+          <div><div class="t">일자별 제보 접수 추이</div><div class="s">제9회 지방선거 · 최근 7일</div></div>
+          <div class="ch-legend"><span><i style="background:var(--red)"></i>접수</span><span><i style="background:var(--g300)"></i>검증 완료</span></div>
+        </div>
+        <svg viewBox="0 0 720 220" style="width:100%;height:auto" preserveAspectRatio="none" aria-label="접수 추이">
+          <g stroke="var(--g100)" stroke-width="1"><line x1="0" y1="20" x2="720" y2="20"/><line x1="0" y1="70" x2="720" y2="70"/><line x1="0" y1="120" x2="720" y2="120"/><line x1="0" y1="170" x2="720" y2="170"/></g>
+          <line x1="480" y1="20" x2="480" y2="200" stroke="var(--red-line)" stroke-width="1.5" stroke-dasharray="3 4"/>
+          <path d="M0,165 L120,150 L240,120 L360,70 L480,40 L600,95 L720,130 L720,200 L0,200 Z" fill="var(--red)" opacity="0.08"/>
+          <path d="M0,165 L120,150 L240,120 L360,70 L480,40 L600,95 L720,130" fill="none" stroke="var(--red)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M0,185 L120,178 L240,162 L360,140 L480,118 L600,150 L720,168" fill="none" stroke="var(--g300)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 7"/>
+          <g fill="var(--red)"><circle cx="240" cy="120" r="4"/><circle cx="360" cy="70" r="4"/><circle cx="480" cy="40" r="5.5" stroke="#fff" stroke-width="2"/></g>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--g400);font-weight:600;margin-top:8px"><span>5/29</span><span>5/31</span><span>6/2</span><span style="color:var(--red);font-weight:700">6/3 선거일</span><span>6/4</span><span>6/5</span><span>6/6</span></div>
+      </div>
+      <div class="viz-grid reveal">
+        <div class="chart-card" style="text-align:left">
+          <div class="ch-head"><div><div class="t">유형별 분포</div></div></div>
+          <div class="hbar"><div class="hl"><span>지연</span><b>89</b></div><div class="track"><i style="width:100%"></i></div></div>
+          <div class="hbar"><div class="hl"><span>수치 에러</span><b>78</b></div><div class="track"><i style="width:88%"></i></div></div>
+          <div class="hbar"><div class="hl"><span>기타</span><b>58</b></div><div class="track"><i style="width:65%"></i></div></div>
+          <div class="hbar"><div class="hl"><span>훼손</span><b>52</b></div><div class="track"><i style="width:58%"></i></div></div>
+          <div class="hbar" style="margin-bottom:0"><div class="hl"><span>봉인</span><b>41</b></div><div class="track"><i style="width:46%"></i></div></div>
+        </div>
+        <div class="chart-card" style="text-align:left">
+          <div class="ch-head"><div><div class="t">지역별 분포 (상위)</div></div></div>
+          <div class="hbar"><div class="hl"><span>경기</span><b>64</b></div><div class="track"><i style="width:100%"></i></div></div>
+          <div class="hbar"><div class="hl"><span>서울</span><b>58</b></div><div class="track"><i style="width:91%"></i></div></div>
+          <div class="hbar"><div class="hl"><span>부산</span><b>31</b></div><div class="track"><i style="width:48%"></i></div></div>
+          <div class="hbar"><div class="hl"><span>인천</span><b>27</b></div><div class="track"><i style="width:42%"></i></div></div>
+          <div class="hbar" style="margin-bottom:0"><div class="hl"><span>경북</span><b>24</b></div><div class="track"><i style="width:37%"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINE -->
+  <section class="sec gray center">
+    <div class="wrap">
+      <div class="reveal" style="max-width:48ch;margin:0 auto 52px">
+        <p class="eyebrow">검증 절차</p>
+        <h2>제보부터 공개까지,<br />하나의 흐름.</h2>
+      </div>
+      <div class="pipe reveal">
+        <div class="pstep"><div class="pn">01</div><div class="pic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div><h4>제보 접수</h4><p>위치·유형·출처·자료를 입력합니다.</p></div>
+        <div class="pstep"><div class="pn">02</div><div class="pic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>수집·봉인</h4><p>R2에 올리고 해시로 봉인합니다.</p></div>
+        <div class="pstep"><div class="pn">03</div><div class="pic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h4>검토 큐</h4><p>정규화 포맷으로 등록됩니다.</p></div>
+        <div class="pstep"><div class="pn">04</div><div class="pic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h4>검증</h4><p>사람이 원본을 대조해 판정합니다.</p></div>
+        <div class="pstep"><div class="pn">05</div><div class="pic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></div><h4>공개</h4><p>통과 데이터만 반영됩니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section class="sec" id="principles">
+    <div class="wrap">
+      <div class="reveal" style="margin-bottom:48px">
+        <p class="eyebrow">설계 원칙</p>
+        <h2>기술이 아니라,<br />신뢰도를 우선합니다.</h2>
+      </div>
+      <div class="grid6 reveal">
+        <div class="prin"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><h4>검증 우선</h4><p>미검증과 사실확인을 절대 같은 무게로 두지 않습니다.</p></div>
+        <div class="prin"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div><h4>출처 추적</h4><p>출처가 없으면 등록되지 않습니다.</p></div>
+        <div class="prin"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>무결성 증명</h4><p>첨부는 해시로 봉인해 변조를 확인합니다.</p></div>
+        <div class="prin"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h7"/></svg></div><h4>중립 서술</h4><p>단정하지 않고 라벨로 표현합니다.</p></div>
+        <div class="prin"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div><h4>개방 기여</h4><p>포맷과 절차를 모두 공개합니다.</p></div>
+        <div class="prin"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><path d="M4 4l16 16"/></svg></div><h4>최소 노출</h4><p>개인정보를 최소화하고 삭제 경로를 둡니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="cta reveal">
+        <h2>현장을 보셨다면,<br />기록으로 남겨주세요.</h2>
+        <p>한 건의 제보가 곧 사실은 아닙니다. 검증을 거쳐 신뢰할 수 있는 기록으로 만드는 일에 함께해주세요.</p>
+        <div class="hero-cta" style="margin-bottom:0">
+          <a class="btn btn-primary btn-lg" href="report.html">제보 보내기</a>
+          <a class="btn btn-soft btn-lg" href="https://github.com/Lampas-2026/Votatis" target="_blank" rel="noopener">프로젝트 기여하기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top"><span class="mark">V</span>Votatis</a>
+        <p>시민이 함께 만드는 검증 가능한 오픈소스 제보 아카이브. 코드와 데이터 포맷, 검증 절차를 모두 공개합니다.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h5>제품</h5><a href="#archive">공개 아카이브</a><a href="#admin">검증 시스템</a><a href="report.html">제보하기</a></div>
+        <div class="foot-col"><h5>오픈소스</h5><a href="https://github.com/Lampas-2026/Votatis" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/Lampas-2026/Votatis/issues" target="_blank" rel="noopener">검증 큐</a></div>
+      </div>
+    </div>
+    <p class="foot-note"><strong>고지.</strong> Votatis는 특정 선거가 조작되었다고 단정하는 플랫폼이 아닙니다. 제보는 주장으로 접수되어 검증 절차를 거치며, 검증 상태가 함께 공개됩니다. 사실관계 판단과 공식 이의 제기는 중앙선거관리위원회 등 권한 있는 기관의 절차를 따릅니다. 개인 식별 정보는 저장하지 않으며, 정정·삭제 요청 경로를 제공합니다. 화면의 수치와 기록은 데모용 예시입니다.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+  } else { document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');}); }
+})();
+</script>
+
+</body>
+</html>
