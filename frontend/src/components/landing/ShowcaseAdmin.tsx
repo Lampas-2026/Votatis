@@ -1,5 +1,5 @@
 import Reveal from "./Reveal";
-import { Lock, CheckSquare, Chart, List, Gear, Check, Image, X } from "./icons";
+import { Lock, CheckSquare, Chart, List, Gear, Check, Image as ImageIcon, X } from "./icons";
 import Torch from "./Torch";
 
 export default function ShowcaseAdmin() {
@@ -190,11 +190,11 @@ export default function ShowcaseAdmin() {
                       </p>
                       <div className="ev-thumbs">
                         <div className="et">
-                          <Image size={18} />
+                          <ImageIcon size={18} />
                           <span className="tg">EXIF</span>
                         </div>
                         <div className="et">
-                          <Image size={18} />
+                          <ImageIcon size={18} />
                           <span className="tg">EXIF</span>
                         </div>
                       </div>
@@ -227,10 +227,8 @@ export default function ShowcaseAdmin() {
             판단은 사람이.
           </h2>
           <p className="desc">
-            수집 단계는 아무것도 판단하지 않습니다. 검토 큐에서 사람이 원본과
-            선관위 공지를 대조해 상태를 부여하고,
-            <br />
-            통과한 데이터만 공개됩니다.
+            수집 단계는 아무것도 판단하지 않습니다. 검토 큐에서 사람이 원본과 선관위
+            공지를 대조해 상태를 부여하고, 통과한 데이터만 공개됩니다.
           </p>
           <div className="feat">
             <div className="fi">

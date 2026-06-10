@@ -15,11 +15,8 @@ export default function ShowcaseMobile() {
             바로 남기세요.
           </h2>
           <p className="desc">
-            위치와 유형을 고르고 사진을 올리면 끝입니다.
-            <br />
-            촬영 위치·시각 정보는 보존된 채 안전하게 업로드되고,
-            <br />
-            출처가 함께 기록됩니다.
+            위치와 유형을 고르고 사진을 올리면 끝입니다. 촬영 위치·시각 정보는 보존된
+            채 안전하게 업로드되고, 출처가 함께 기록됩니다.
           </p>
           <div className="feat">
             <div className="fi">
@@ -35,9 +32,7 @@ export default function ShowcaseMobile() {
                 <Check size={14} />
               </span>
               <p>
-                메타데이터를 확인하고 <b>1회용 보안 링크</b>로
-                <br />
-                직접 업로드합니다.
+                메타데이터를 확인하고 <b>1회용 보안 링크</b>로 직접 업로드합니다.
               </p>
             </div>
             <div className="fi">

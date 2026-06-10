@@ -1429,40 +1429,56 @@ footer {
   flex-direction: column;
   align-items: center;
   flex: 0 0 auto;
-  width: 150px;
+  width: 200px;
 }
+/* 실제 390px 폭 화면을 transform: scale로 통째 축소 → 내부 비율 100% 보존
+   (글자만 줄이는 zoom과 달리 레이아웃이 밀리지 않음).
+   상단 대표 영역만 보이도록 높이를 제한하고 하단은 페이드 처리. */
 .fphone {
-  width: 150px;
+  width: 200px;
+  height: 380px;
   pointer-events: none;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid var(--g200);
+  box-shadow: var(--sh);
+  background: #fff;
+  position: relative;
 }
 .fphone .device {
-  width: 100%;
+  width: 390px;
   background: transparent;
   padding: 0;
   border-radius: 0;
   box-shadow: none;
+  transform: scale(0.5128); /* 200 / 390 */
+  transform-origin: top left;
 }
 .fphone .screen {
-  border-radius: 16px;
-  border: 1px solid var(--g200);
-  box-shadow: var(--sh);
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
 }
 /* 베젤·노치·상태바 제거 */
 .fphone .notch,
 .fphone .sbar {
   display: none;
 }
-/* 작은 폰 안에 화면이 더 들어오도록 내부 축소 */
-.fphone .body {
-  zoom: 0.62;
+/* 하단 자연스러운 페이드 (잘린 경계 감추기) */
+.fphone::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
+  z-index: 1;
 }
-.fphone .pcontent {
-  overflow: hidden;
-}
-/* 흐름 화살표 가시성 */
-.farrow {
-  display: grid;
-  place-items: center;
+/* 좁은 폰 안에서 제목이 글자 단위로 쪼개지지 않도록 */
+.fphone .mn,
+.fphone .nm {
+  min-width: 0;
 }
 .fmeta {
   text-align: center;
@@ -1486,13 +1502,16 @@ footer {
   color: var(--g600);
   line-height: 1.5;
 }
+/* 흐름 화살표 — 폰 세로 중앙(380/2)에 배치 */
 .farrow {
   position: absolute;
-  top: 130px;
-  right: -16px;
+  top: 182px;
+  right: -13px;
   font-size: 20px;
+  line-height: 1;
   color: var(--g300);
   font-weight: 400;
+  z-index: 2;
 }
 @media (max-width: 980px) {
   .flow {

@@ -20,6 +20,8 @@ export default function Reveal({
       "(prefers-reduced-motion: reduce)"
     ).matches;
     if (reduce || !("IntersectionObserver" in window)) {
+      // 모션 비선호/미지원 환경에선 즉시 노출 (1회성 초기화)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShown(true);
       return;
     }

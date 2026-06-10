@@ -7,7 +7,6 @@ import {
   ICamera,
   IPin,
   IX,
-  IImage,
   ICheck,
   IPlus,
   IBack,
@@ -16,6 +15,18 @@ import Torch from "@/components/landing/Torch";
 
 type Step = "onb" | "s1" | "s2" | "s3" | "done";
 const CATS: Category[] = ["A", "B", "C"];
+
+function StepDots({ step }: { step: Step }) {
+  const order: Step[] = ["s1", "s2", "s3"];
+  const cur = order.indexOf(step);
+  return (
+    <div className="step-dots">
+      {order.map((s, i) => (
+        <i key={s} className={cur >= i ? "on" : ""} />
+      ))}
+    </div>
+  );
+}
 
 export default function ReportFlow() {
   const [step, setStep] = useState<Step>("onb");
@@ -40,17 +51,6 @@ export default function ReportFlow() {
   const s1Valid = !!type;
   const s2Valid = title.trim().length > 0;
   const s3Valid = agree;
-
-  function StepDots() {
-    const order: Step[] = ["s1", "s2", "s3"];
-    return (
-      <div className="step-dots">
-        {order.map((s) => (
-          <i key={s} className={order.indexOf(step as Step) >= order.indexOf(s) ? "on" : ""} />
-        ))}
-      </div>
-    );
-  }
 
   return (
     <div className="report-stage">
@@ -124,7 +124,7 @@ export default function ReportFlow() {
               <button className={`pbtn${s1Valid ? "" : " dis"}`} disabled={!s1Valid} onClick={() => s1Valid && setStep("s2")}>
                 다음
               </button>
-              <StepDots />
+              <StepDots step={step} />
             </div>
           </div>
         )}
@@ -192,7 +192,7 @@ export default function ReportFlow() {
               <button className={`pbtn${s2Valid ? "" : " dis"}`} disabled={!s2Valid} onClick={() => s2Valid && setStep("s3")}>
                 다음
               </button>
-              <StepDots />
+              <StepDots step={step} />
             </div>
           </div>
         )}
@@ -245,7 +245,7 @@ export default function ReportFlow() {
               >
                 제보 보내기
               </button>
-              <StepDots />
+              <StepDots step={step} />
             </div>
           </div>
         )}

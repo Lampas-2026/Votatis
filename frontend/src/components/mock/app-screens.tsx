@@ -1,5 +1,5 @@
 /* 앱 목업 화면 본문 (app.html 1:1). DeviceFrame 안에 들어가는 콘텐츠. */
-import { ICamera, IPin, IX, IImage, ICheck, IPlus, IBack, IGrid, ISearch, IList } from "./mock-icons";
+import { ICamera, IPin, IX, IImage, ICheck, IPlus, IBack, IGrid, ISearch } from "./mock-icons";
 
 /* A-00 온보딩 */
 export function MockOnboarding() {
