@@ -1006,3 +1006,39 @@ header.nav {
   background: var(--g900);
   color: #fff;
 }
+
+/* ── 폼 입력/라벨 (공개 페이지: 검색·아카이브 등). mock.css의 .pi/.pl과 동일 정의를
+   여기에도 둬, app-shell.css만 import하는 실 페이지에서도 적용되게 한다. ── */
+.pi {
+  min-height: 50px;
+  border: 1px solid var(--g200);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 15px;
+  font-size: 15px;
+  color: var(--g400);
+  margin-bottom: 16px;
+}
+.pi.fill {
+  color: var(--g900);
+  font-weight: 600;
+  border-color: var(--g300);
+}
+.pi svg {
+  color: var(--red);
+  flex-shrink: 0;
+}
+.pi.foc {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px var(--red-bg);
+  color: var(--g900);
+  font-weight: 600;
+}
+.pl {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--g700);
+  margin-bottom: 8px;
+}

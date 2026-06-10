@@ -1,8 +1,8 @@
 ---
 tldr: apps/frontend(SSG)를 Cloudflare Pages(votatis-web)에 배포할 땐 ①NEXT_PUBLIC_*(API URL·Turnstile sitekey)를 빌드 타임에 주입해 빌드 ②`wrangler pages deploy out --project-name=votatis-web --branch=main`(브랜치 생략 시 현재 git 브랜치 기반 preview로 올라가 votatis-web.pages.dev가 아님) ③preview origin은 intake ALLOWED_ORIGIN에 없어 CORS 막힘(production 도메인만 허용) ④실 Turnstile sitekey domains에 votatis-web.pages.dev를 대시보드에서 추가해야 제보 폼 동작.
 tags: [pitfall, deploy, cloudflare-pages, frontend, cors]
-last_retrieved: 2026-06-10
-retrieval_count: 0
+last_retrieved: 2026-06-11
+retrieval_count: 1
 ---
 
 ## 규칙 / 교훈
