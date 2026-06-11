@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"$CLAUDE_PROJECT_DIR/steering/README.md\" 2>/dev/null | jq -Rs '{hookSpecificOutput:{hookEventName:\"SessionStart\",additionalContext:(\"# Steering 인덱스 (작업 전 회상용)\\n작업과 관련된 항목이 있으면 해당 steering/*.md를 읽고 따른 뒤 회수 통계를 갱신하라.\\n\\n\" + .)}}' 2>/dev/null || true",
+            "statusMessage": "steering 인덱스 회상 중..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -e '.stop_hook_active==true' >/dev/null 2>&1 && exit 0; echo '{\"decision\":\"block\",\"reason\":\"턴을 끝내기 전 steering 점검: 이번 대화에서 새로 합의된 규칙·반복하면 안 되는 실수·코드로 알 수 없는 비자명한 결정이 나왔다면 steering/<kebab-case>.md로 캡처하고(frontmatter: tldr, tags, last_retrieved, retrieval_count) steering/README.md 인덱스 표를 갱신하라. 이번 작업에서 실제 참조·적용한 steering 항목이 있으면 그 파일의 retrieval_count를 +1, last_retrieved를 오늘 날짜로 갱신하고 인덱스도 동기화하라. 캡처·갱신할 것이 없으면 아무 작업도 하지 말고 그대로 종료하라.\"}'"
+          }
+        ]
+      }
+    ]
+  }
+}

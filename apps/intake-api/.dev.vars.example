@@ -1,0 +1,15 @@
+# 로컬 개발용 시크릿. 복사해서 .dev.vars 로 쓰고 실제 값 채운다. (.dev.vars 는 커밋 금지)
+
+# Turnstile siteverify secret. 로컬에선 "항상 통과" 테스트 키를 쓰면 위젯 없이 흐름을 돌릴 수 있다.
+TURNSTILE_SECRET="1x0000000000000000000000000000000AA"
+
+# R2 S3 API 토큰 (presigned PUT 서명용).
+#  - 원격 모드(pnpm dev:remote)·배포에서만 필요.
+#  - 로컬 모드(pnpm dev / dev:local, LOCAL_UPLOAD)에서는 presigned 를 안 쓰므로 비워도 된다.
+R2_ACCESS_KEY_ID="..."
+R2_SECRET_ACCESS_KEY="..."
+
+# 실행 모드는 환경변수가 아니라 명령어로 가른다:
+#   pnpm dev / pnpm dev:local   → 로컬 R2·D1 + 워커 자체 업로드(/_dev/upload). CF 접근 불필요.
+#   pnpm dev:remote             → 실제 R2·D1(--remote). CF 자격증명 필요.
+# (dev:local 은 내부적으로 --var LOCAL_UPLOAD:true 를 주입한다. LOCAL_UPLOAD 를 .dev.vars 에 둘 필요 없음.)

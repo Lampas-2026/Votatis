@@ -14,8 +14,9 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
+# 단, apps/web/src/lib 는 빌드 산출물이 아니라 소스다 — 위 lib/ 무시에서 예외 처리
+!apps/web/src/lib/
 parts/
 sdist/
 var/
@@ -216,3 +217,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node / Cloudflare Workers
+node_modules/
+.wrangler/
+.dev.vars
+dist/
+
+.prod.vars
+
+# Playwright MCP (스냅샷·콘솔 로그 등 실행 산출물)
+.playwright-mcp/

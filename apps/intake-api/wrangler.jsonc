@@ -1,0 +1,38 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "votatis-intake-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "r2_buckets": [
+    // preview_bucket_name 은 `wrangler dev --remote` 용. presigned PUT 이 실 버킷을 가리키므로
+    // finalize 가 같은 버킷을 읽도록 프로덕션 버킷을 그대로 재사용한다.
+    {
+      "binding": "EVIDENCE_BUCKET",
+      "bucket_name": "votatis-evidence",
+      "preview_bucket_name": "votatis-evidence"
+    }
+  ],
+  "d1_databases": [
+    // 제보 저장소. 로컬(`wrangler dev`)·테스트는 로컬 SQLite, `--remote`/배포는 이 원격 D1 을 쓴다.
+    // 첨부 포함 흐름은 R2 가 실제 버킷이라야 하므로 `wrangler dev --remote` 로 돌린다.
+    {
+      "binding": "DB",
+      "database_name": "votatis-reports",
+      "database_id": "18dfa252-ead4-4c02-8fe4-a7ed6979be55",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    // 만료된 pending(업로드 미완료) 레코드 정리. (cleanup.PENDING_TTL_MS 와 정합)
+    "crons": ["*/30 * * * *"]
+  },
+  "vars": {
+    "ALLOWED_ORIGIN": "http://localhost:3000,https://votatis-web.pages.dev",
+    "R2_ACCOUNT_ID": "4691f0338d03a2e7d000403d13b66264",
+    "R2_BUCKET": "votatis-evidence"
+  }
+  // Secrets (wrangler secret put / .dev.vars):
+  //   TURNSTILE_SECRET, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
+}
