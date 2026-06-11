@@ -8,7 +8,7 @@ export type AdminNav = "dashboard" | "members" | "reports" | "queue" | "evidence
 const ITEMS: { key: AdminNav; label: string; href: string; Icon: typeof IGrid; cnt?: string }[] = [
   { key: "dashboard", label: "대시보드", href: "/free/admin/dashboard", Icon: IGrid },
   { key: "members", label: "회원", href: "/free/admin/members", Icon: IUsers },
-  { key: "reports", label: "제보", href: "/free/admin/queue", Icon: IList },
+  { key: "reports", label: "제보", href: "/free/admin/reports", Icon: IList },
   { key: "queue", label: "검토 큐", href: "/free/admin/queue", Icon: ICheckSq },
   { key: "evidence", label: "원본 데이터", href: "/free/admin/evidence/0153", Icon: IImage },
 ];
@@ -43,7 +43,7 @@ export default function AdminShell({
             </Link>
           ))}
           <div className="ds-sec">콘텐츠</div>
-          <Link href="/free/admin/dashboard" className={`ds-item${active === "content" ? " on" : ""}`}>
+          <Link href="/free/admin/content" className={`ds-item${active === "content" ? " on" : ""}`}>
             <IEdit />정보·공지
           </Link>
           <div className="ds-sec">바로가기</div>
